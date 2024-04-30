@@ -1,0 +1,36 @@
+package masternamebattler.chara.Magic;
+
+import java.util.function.Supplier;
+import masternamebattler.chara.Conditions;
+
+// 魔法の種類の列挙型
+public enum MagicType {
+    FIRE(Fire::new, Fire::getConsumptionMP, Fire::getConsumptionGrantCondition),
+    THUNDER(Thunder::new, Thunder::getConsumptionMP, Thunder::getConsumptionGrantCondition),
+    PARALYSIS(Paralysis::new, Paralysis::getConsumptionMP, Paralysis::getConsumptionGrantCondition),
+    POISON(Poison::new, Poison::getConsumptionMP, Poison::getConsumptionGrantCondition),
+    HEAL(Heal::new, Heal::getConsumptionMP, Heal::getConsumptionGrantCondition);
+
+    private Supplier<Magic> constructor;
+    private Supplier<Integer> consumptionMPSupplier;
+    private Supplier<Conditions> consumptionGrantConditionSupplier;
+
+    MagicType(Supplier<Magic> constructor, Supplier<Integer> consumptionMPSupplier, Supplier<Conditions> consumptionGrantConditionSupplier) {
+        this.constructor = constructor;
+        this.consumptionMPSupplier = consumptionMPSupplier;
+        this.consumptionGrantConditionSupplier = consumptionGrantConditionSupplier;
+    }
+
+    public Magic createMagic() {
+        return constructor.get();
+    }
+
+    public int getConsumptionMP() {
+        return consumptionMPSupplier.get();
+    }
+
+    public Conditions getConsumptionGrantCondition() {
+        return consumptionGrantConditionSupplier.get();
+        
+    }
+}
