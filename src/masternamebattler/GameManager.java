@@ -1,58 +1,97 @@
 package masternamebattler;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import masternamebattler.chara.Player;
-import masternamebattler.Constants.Teams;
-import masternamebattler.chara.Conditions;
-import masternamebattler.chara.CharacterType;
+import masternamebattler.Chara.CharacterType;
+import masternamebattler.Chara.Player;
+import masternamebattler.Condition.Conditions;
+import masternamebattler.GameConstants.Teams;
+import masternamebattler.Util.UserInput.UserInput;
 
 /**
  * ゲームの進行を管理するクラス
  */
 public class GameManager {
-    
-    public static final String GAME_FINISH_MESSAGE = "%sの勝利です";
-    public static final String SELECT_JOB_MESSAGE = "キャラクターの職業を選択してください:";
-    public static final String INVALID_INPUT_MESSAGE = "入力が正しくありません";
-    public static final String TURN_COUNT_MESSAGE = "ターン%d";
-    public static final int START_TURN_COUNT = 1;
+    private final int START_TURN_COUNT = 1;
 
     public ArrayList<Player> playerList = new ArrayList<Player>();
     public Player mainPlayer;
     public Player enemyPlayer;
+    public Party party;
     public int turnCount;
-    
+    public boolean isGameEnd = false;    
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
     /**
      * ゲームを開始する
      * キャラクターを作成し、ゲームが終了するまでターンを進める
      */
     public void start() {
+        party = new Party();
         prepairPlayers();
-        sortPlayerList();
+        party.appendPlayer(mainPlayer);
+        party.appendPlayer(enemyPlayer);
+        party.sortPlayerListForAgi();
         Player firstPlayer = playerList.get(0);
-        Player secondPlayer = playerList.get(1); 
+        Player secondPlayer = playerList.get(1);
 
         turnCount = START_TURN_COUNT;
-        System.out.println(Constants.BLANK_LINE);
+        System.out.println(GlobalConstants.BLANK_LINE);
         while(!checkGameEnd()){
-            System.out.println(String.format(TURN_COUNT_MESSAGE, turnCount));
+            turnStartProcess(party);
+            UserInput.waitForEnter();
+            turnProxess();
+            if(checkGameEnd()){
+                break;
+            }
+            UserInput.waitForEnter();
+            turnEndProcess();
+        }
+        
+
+        turnCount = START_TURN_COUNT;
+        System.out.println(GlobalConstants.BLANK_LINE);
+        while(!checkGameEnd()){
+            
+            System.out.println(String.format(GameConstants.TURN_COUNT_MESSAGE, turnCount));
             firstPlayer.attack(secondPlayer);
             if(checkGameEnd()){
                 break;
             }
             secondPlayer.attack(firstPlayer);
             turnEndProcess();
-            System.out.println(Constants.PARTITION);
+            System.out.println(GlobalConstants.PARTITION);
         }
         gameFinish();
+    }
+
+    public void turmStartProcess(){
+        System.out.println(String.format(GameConstants.TURN_COUNT_MESSAGE, turnCount));
+        party.showMembers();
+    }
+
+    public void turnProxess(){
+        while(!party.checkTurnEnd() && !party.checkGameEnd()){
+            Player attacker = party.getAttacker();
+            Player defender = party.getDefender();
+            UserInput.waitForEnter();
+            attacker.attack(defender);
+            UserInput.waitForEnter();
+        }
     }
 
     /**
      * プレイヤーを2名作成しリストに加える
      */
     private void prepairPlayers(){
+        for(int i = 0; i < GameConstants.NUMBER_OF_TEAM_MENBERS; i++){
+            Player player = makePlayer(Teams.PLAYER);
+            playerList.add(player);
+        }
+        for(int i = 0; i < GameConstants.NUMBER_OF_TEAM_MENBERS; i++){
+            Player player = makePlayer(Teams.ENEMY);
+            playerList.add(player);
+        }
         mainPlayer = makePlayer(Teams.PLAYER);
         enemyPlayer = makePlayer(Teams.ENEMY);
         
@@ -69,7 +108,7 @@ public class GameManager {
      * @return 作成したプレイヤー
      */
     private Player makePlayer(Teams team){
-        int jobInt = inputJobChoice();
+        int jobInt = choiceJobForinput();
         CharacterType selectedClass = CharacterType.fromId(jobInt);
         return selectedClass.createPlayer(team);
     }
@@ -79,28 +118,26 @@ public class GameManager {
      * 選択肢を表示し、入力値を検証し、正しい入力が行われるまで繰り返す
      * @return 選択されたジョブのID
      */
-    private int inputJobChoice(){
-        Scanner scanner = new Scanner(System.in);
-        int choice = 0;
-
+    private int choiceJobForinput(){
+        ArrayList<Integer> jobIntList = new ArrayList<Integer>();
+        for (CharacterType characterClass : CharacterType.values()) {
+            jobIntList.add(characterClass.getId());
+        }
+        
+        int jobInt = -1;
         do{
-            System.out.println(SELECT_JOB_MESSAGE);
-            for (CharacterType characterClass : CharacterType.values()) {
-                System.out.println(characterClass.getId() + ": " + characterClass.getDisplayName());
-            }
-            if(!scanner.hasNextInt()){
-                System.out.println(INVALID_INPUT_MESSAGE);
-                scanner.next();
-                continue;
-            }
-            choice = scanner.nextInt();
-            if(!CharacterType.isValidId(choice)){
-                System.out.println(INVALID_INPUT_MESSAGE);
-                continue;
-            }
-        }while(!CharacterType.isValidId(choice));
+            showSelectJobMessage();
+            jobInt = UserInput.inputIntValidValues(jobIntList);
+        }while(!CharacterType.isValidId(jobInt));
 
-        return choice;
+        return jobInt;
+    }
+
+    private void showSelectJobMessage(){
+        System.out.println(GameConstants.SELECT_JOB_MESSAGE);
+        for (CharacterType characterClass : CharacterType.values()) {
+            System.out.println(characterClass.getId() + ": " + characterClass.getDisplayName());
+        }
     }
 
     /**
@@ -129,7 +166,7 @@ public class GameManager {
     private void gameFinish(){
         for (Player player : playerList) {
             if(player.getIsLive()){
-                System.out.println(String.format(GAME_FINISH_MESSAGE, player.getName()));
+                System.out.println(String.format(GameConstants.GAME_FINISH_MESSAGE, player.getName()));
             }
         }
     }

@@ -1,12 +1,12 @@
-package masternamebattler.chara;
+package masternamebattler.Condition;
 
 /**
  * 状態異常の列挙型
  * 表示名を持つ
  */
 public enum Conditions {
-    PARALYSIS("麻痺"),
-    POISON("毒");
+    PARALYSIS(ConditionConstants.PARALYSIS_DISPLAY_NAME),
+    POISON(ConditionConstants.POISON_DISPLAY_NAME);
 
     private final String DISPLAY_NAME;
 

@@ -1,13 +1,15 @@
-package masternamebattler.chara;
+package masternamebattler.Chara;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
-import masternamebattler.Constants;
-import masternamebattler.chara.Magic.Fire;
-import masternamebattler.chara.Magic.Magic;
-import masternamebattler.chara.Magic.Thunder;
+
+import masternamebattler.GameConstants;
+import masternamebattler.GlobalConstants;
+import masternamebattler.Magic.Fire;
+import masternamebattler.Magic.Magic;
+import masternamebattler.Magic.Thunder;
 
 /**
  * 魔法使いのクラス
@@ -15,25 +17,13 @@ import masternamebattler.chara.Magic.Thunder;
  */
 public class Wizard extends Player {
     // 魔法使いのステータスの最大値、最小値
-    public static final int WIZARD_MIN_HP = 50;
-    public static final int WIZARD_MAX_HP = 150;
-    public static final int WIZARD_MIN_MP = 30;
-    public static final int WIZARD_MAX_MP = 80;
-    public static final int WIZARD_MIN_STR = 1;
-    public static final int WIZARD_MAX_STR = 50;
-    public static final int WIZARD_MIN_DEF = 1;
-    public static final int WIZARD_MAX_DEF = 50;
-    public static final int WIZARD_MIN_LUCK = 1;
-    public static final int WIZARD_MAX_LUCK = 100;
-    public static final int WIZARD_MIN_AGI = 20;
-    public static final int WIZARD_MAX_AGI = 60;
-    public static final String DISPLAY_NAME = "魔導士";
+    public static final String DISPLAY_NAME = CharaConstants.Wizard.DISPLAY_NAME;
 
     /**
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Wizard(Constants.Teams team) {
+    public Wizard(GameConstants.Teams team) {
         super(team);
     }
 
@@ -50,12 +40,12 @@ public class Wizard extends Player {
      */
     @Override
     public void setStatsu(){
-        this.hp = calcStatus(this.name, WIZARD_MAX_HP, WIZARD_MIN_HP, HP_INDEX);
-        this.mp = calcStatus(this.name, WIZARD_MAX_MP, WIZARD_MIN_MP, MP_INDEX);
-        this.str = calcStatus(this.name, WIZARD_MAX_STR, WIZARD_MIN_STR, STR_INDEX);
-        this.def = calcStatus(this.name, WIZARD_MAX_DEF, WIZARD_MIN_DEF, DEF_INDEX);
-        this.agi = calcStatus(this.name, WIZARD_MAX_AGI, WIZARD_MIN_AGI, AGI_INDEX);
-        this.luck = calcStatus(this.name, WIZARD_MAX_LUCK, WIZARD_MIN_LUCK, LUCK_INDEX);
+        this.hp = calcStatus(this.name, CharaConstants.Wizard.MAX_HP, CharaConstants.Wizard.MIN_HP, CharaConstants.HP_INDEX);
+        this.mp = calcStatus(this.name, CharaConstants.Wizard.MAX_MP, CharaConstants.Wizard.MIN_MP, CharaConstants.MP_INDEX);
+        this.str = calcStatus(this.name, CharaConstants.Wizard.MAX_STR, CharaConstants.Wizard.MIN_STR, CharaConstants.STR_INDEX);
+        this.def = calcStatus(this.name, CharaConstants.Wizard.MAX_DEF, CharaConstants.Wizard.MIN_DEF, CharaConstants.DEF_INDEX);
+        this.agi = calcStatus(this.name, CharaConstants.Wizard.MAX_AGI, CharaConstants.Wizard.MIN_AGI, CharaConstants.AGI_INDEX);
+        this.luck = calcStatus(this.name, CharaConstants.Wizard.MAX_LUCK, CharaConstants.Wizard.MIN_LUCK, CharaConstants.LUCK_INDEX);
     }
 
     /**
@@ -76,7 +66,7 @@ public class Wizard extends Player {
     @Override
     public void attack(Player enemy) {
         if(isIncapacitationForParalysis()){
-            System.out.println(String.format(PARALYSIS_MESSAGE, this.name));
+            System.out.println(String.format(CharaConstants.PARALYSIS_MESSAGE, this.name));
             return;
         }
         if(canUseMagic()){

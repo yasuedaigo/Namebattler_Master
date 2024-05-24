@@ -1,4 +1,4 @@
-package masternamebattler.chara;
+package masternamebattler.Chara;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

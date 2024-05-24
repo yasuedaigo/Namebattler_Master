@@ -1,8 +1,9 @@
-package masternamebattler.chara;
+package masternamebattler.Chara;
 
 import java.util.function.Function;
 
-import masternamebattler.Constants;
+import masternamebattler.GlobalConstants;
+import masternamebattler.GameConstants;
     
     /**
      * キャラクターの職業を表す列挙型
@@ -16,7 +17,7 @@ import masternamebattler.Constants;
 
             private final int id;
             private final String displayName;
-            private final Function<Constants.Teams, Player> playerConstructor;
+            private final Function<GameConstants.Teams, Player> playerConstructor;
 
             /**
              * コンストラクタ
@@ -24,7 +25,7 @@ import masternamebattler.Constants;
              * @param displayName 表示名
              * @param playerConstructor プレイヤーのコンストラクタ
              */
-            CharacterType(int id, String displayName, Function<Constants.Teams, Player> playerConstructor) {
+            CharacterType(int id, String displayName, Function<GameConstants.Teams, Player> playerConstructor) {
                 this.id = id;
                 this.displayName = displayName;
                 this.playerConstructor = playerConstructor;
@@ -49,7 +50,7 @@ import masternamebattler.Constants;
              * @param useTeam プレイヤーの所属するチーム
              * @return プレイヤーのインスタンス
              */
-            public Player createPlayer(Constants.Teams useTeam) {
+            public Player createPlayer(GameConstants.Teams useTeam) {
                 return playerConstructor.apply(useTeam);
             }
 

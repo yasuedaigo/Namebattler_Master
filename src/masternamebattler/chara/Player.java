@@ -1,37 +1,20 @@
-package masternamebattler.chara;
+package masternamebattler.Chara;
 
 import java.util.Random;
 import java.util.Scanner;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import masternamebattler.Constants;
-import masternamebattler.chara.Magic.Paralysis;
-import masternamebattler.chara.Magic.Poison;
+
+import masternamebattler.GameConstants;
+import masternamebattler.GlobalConstants;
+import masternamebattler.Condition.Conditions;
+import masternamebattler.Magic.Paralysis;
+import masternamebattler.Magic.Poison;
 
 /**
  * プレイヤーの基底クラス
  */
 public abstract class Player {
-    public static final String ATTACK_MESSAGE = "%sの攻撃！";
-    public static final String DAMAGE_MESSAGE = "%sに%dのダメージ！";
-    public static final String DOWN_MESSAGE = "%sは力尽きた...！";
-    public static final String CRITICAL_MESSAGE = "会心の一撃！";
-    public static final String USE_MAGIC_MESSAGE = "%sは%sを使った！";
-    public static final String PARALYSIS_MESSAGE = "%sは麻痺して動けなかった！";
-    public static final String POISON_DAMAGE_MESSAGE = "%sは毒によりダメージを受けた！";
-    public static final String DECIDE_NAME_MESSAGE = "名前を入力してください";
-    public static final String INVALID_NAME_MESSAGE = "入力が正しくありません";
-    public static final String SET_CONDITION_MESSAGE = "%sは%sにかかった！";
-    public static final String SHOW_HP_MESSAGE = "%s HP:%d";
-
-    public static final int MIN_DAMAGE = 0;
-    public static final int MIN_HP = 0;
-    public static final int HP_INDEX = 0;
-    public static final int MP_INDEX = 1;
-    public static final int STR_INDEX = 2;
-    public static final int DEF_INDEX = 3;
-    public static final int AGI_INDEX = 4;
-    public static final int LUCK_INDEX = 5;
 
     public String name;
     public int hp;
@@ -41,7 +24,7 @@ public abstract class Player {
     public int luck;
     public int agi;
     public boolean isLive;
-    public Constants.Teams team;
+    public GameConstants.Teams team;
     public Conditions condition;
     
     /**
@@ -49,7 +32,7 @@ public abstract class Player {
      * 名前を入力してもらい、ステータスを計算してセットする
      * @param useTeam プレイヤーの所属するチーム
      */
-    public Player(Constants.Teams useTeam) {
+    public Player(GameConstants.Teams useTeam) {
         this.name = decideNameForInput();
         this.setStatsu();
         this.isLive = true;
@@ -63,7 +46,7 @@ public abstract class Player {
      */
     protected String decideNameForInput() {
         Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-        System.out.println(DECIDE_NAME_MESSAGE);
+        System.out.println(CharaConstants.DECIDE_NAME_MESSAGE);
         String input = null;
         do{
             input = scanner.nextLine();
@@ -77,7 +60,7 @@ public abstract class Player {
      */
     protected boolean validateName(String value) {
         if(value == null || value.length() == 0){
-            System.out.println(INVALID_NAME_MESSAGE);
+            System.out.println(CharaConstants.INVALID_NAME_MESSAGE);
             return false;
         }
         return true;
@@ -93,7 +76,7 @@ public abstract class Player {
      */
     protected int calcStatus(String name,int max_status,int min_status,int index){
         int baseStatusRange = max_status - min_status;
-        int baseStatus = baseStatusRange * HashDigest.generatePercentage(name,index) / Constants.PERCENTAGE_BASE;
+        int baseStatus = baseStatusRange * HashDigest.generatePercentage(name,index) / GlobalConstants.PERCENTAGE_BASE;
         return baseStatus + min_status;
     }
 
@@ -115,7 +98,7 @@ public abstract class Player {
      * HPを表示する
      */
     public void showHp(){
-        System.out.println(String.format(SHOW_HP_MESSAGE, this.name, this.hp));
+        System.out.println(String.format(CharaConstants.SHOW_HP_MESSAGE, this.name, this.hp));
     }
 
     /**
@@ -124,7 +107,7 @@ public abstract class Player {
      */
     public int randomIntForRange(int max){
         Random random = new Random();
-        return random.nextInt(max + Constants.RANGE_INCLUSIVE_OFFSET);
+        return random.nextInt(max + GlobalConstants.RANGE_INCLUSIVE_OFFSET);
     }
 
     /**
@@ -141,7 +124,7 @@ public abstract class Player {
      */
     public void attack(Player enemy) {
         if(isIncapacitationForParalysis()){
-            System.out.println(String.format(PARALYSIS_MESSAGE, this.name));
+            System.out.println(String.format(CharaConstants.PARALYSIS_MESSAGE, this.name));
             return;
         }
         normalAttack(enemy);
@@ -153,10 +136,10 @@ public abstract class Player {
      * @param enemy 敵プレイヤー
      */
     public void normalAttack(Player enemy){
-        System.out.println(String.format(ATTACK_MESSAGE, this.name));
+        System.out.println(String.format(CharaConstants.ATTACK_MESSAGE, this.name));
         int damage = calcDamage(enemy);
-        if(damage < MIN_DAMAGE){
-            damage = MIN_DAMAGE;
+        if(damage < CharaConstants.MIN_DAMAGE){
+            damage = CharaConstants.MIN_DAMAGE;
         }
         enemy.damage(damage);
     }
@@ -170,12 +153,12 @@ public abstract class Player {
      */
     public int calcDamage(Player enemy){
         if(this.isCritical()){
-            System.out.println(CRITICAL_MESSAGE);
+            System.out.println(CharaConstants.CRITICAL_MESSAGE);
             return this.str;
         }
         int damage = this.randomIntForRange(this.str) - enemy.randomIntForRange(def);
-        if(damage < MIN_DAMAGE){
-            damage = MIN_DAMAGE;
+        if(damage < CharaConstants.MIN_DAMAGE){
+            damage = CharaConstants.MIN_DAMAGE;
         }
         return damage;
     }
@@ -186,8 +169,8 @@ public abstract class Player {
      */
     public boolean isCritical(){
         Random random = new Random();
-        int luckPercentage = (this.luck * Constants.PERCENTAGE_BASE) / Constants.MAX_LUCK;
-        return random.nextInt(Constants.PERCENTAGE_BASE) < luckPercentage;
+        int luckPercentage = (this.luck * GlobalConstants.PERCENTAGE_BASE) / CharaConstants.MAX_LUCK_STATUS;
+        return random.nextInt(GlobalConstants.PERCENTAGE_BASE) < luckPercentage;
     }
 
     /**
@@ -196,12 +179,12 @@ public abstract class Player {
      * @param damage 与ダメージ
      */
     public void damage(int damage){
-        System.out.println(String.format(DAMAGE_MESSAGE, this.name, damage));
+        System.out.println(String.format(CharaConstants.DAMAGE_MESSAGE, this.name, damage));
         this.hp -= damage;
-        if(this.hp <= MIN_HP){
-            this.hp = MIN_HP;
+        if(this.hp <= CharaConstants.DOWN_HP){
+            this.hp = CharaConstants.DOWN_HP;
             this.isLive = false;
-            System.out.println(String.format(DOWN_MESSAGE, this.name));
+            System.out.println(String.format(CharaConstants.DOWN_MESSAGE, this.name));
         }
     }
 
@@ -225,7 +208,7 @@ public abstract class Player {
      */
     public void setCondisions(Conditions condition){
         this.condition = condition;
-        System.out.println(String.format(SET_CONDITION_MESSAGE, this.name, condition.getDisplayName()));
+        System.out.println(String.format(CharaConstants.SET_CONDITION_MESSAGE, this.name, condition.getDisplayName()));
     }
 
     /**
@@ -244,7 +227,7 @@ public abstract class Player {
             return false;
         }
         Random random = new Random();
-        if(random.nextInt(Constants.PERCENTAGE_BASE + Constants.RANGE_INCLUSIVE_OFFSET) < Paralysis.PARALYSIS_RATE){
+        if(random.nextInt(GlobalConstants.PERCENTAGE_BASE + GlobalConstants.RANGE_INCLUSIVE_OFFSET) < Paralysis.PARALYSIS_RATE){
             return true;
         }
         return false;
@@ -256,9 +239,9 @@ public abstract class Player {
      */
     public void poisonDamage(){
         if(this.isLive == true && this.condition == Conditions.POISON){
-            System.out.println(String.format(POISON_DAMAGE_MESSAGE, this.name));
+            System.out.println(String.format(CharaConstants.POISON_DAMAGE_MESSAGE, this.name));
             Random random = new Random();
-            int damage = random.nextInt(Poison.POISON_MAX_DAMAGE - Poison.POISON_MIN_DAMAGE + Constants.RANGE_INCLUSIVE_OFFSET) + Poison.POISON_MIN_DAMAGE;
+            int damage = random.nextInt(Poison.POISON_MAX_DAMAGE - Poison.POISON_MIN_DAMAGE + GlobalConstants.RANGE_INCLUSIVE_OFFSET) + Poison.POISON_MIN_DAMAGE;
             this.damage(damage);
         }
     }

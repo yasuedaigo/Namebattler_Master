@@ -1,15 +1,16 @@
-package masternamebattler.chara.Magic;
+package masternamebattler.Magic;
 
-import masternamebattler.chara.Conditions;
-import masternamebattler.chara.Player;
+import java.util.concurrent.ThreadLocalRandom;
+
+import masternamebattler.GlobalConstants;
+import masternamebattler.Chara.Player;
+import masternamebattler.Condition.Conditions;
 
 /**
  * 魔法の抽象クラス
  */
 public abstract class Magic{
-    public static final String CANNOTCASTMESSAGE = "%sは%sを唱えられなかった！";
-    public static final String CASTMESSAGE = "%sは%sを唱えた！";
-
+    
     /**
      * 魔法を唱えられるかどうか
      * @param user 味方プレイヤー
@@ -28,22 +29,34 @@ public abstract class Magic{
      */
     public void cast(Player user, Player enemy){
         if(user.mp < getConsumptionMp()) {
-            System.out.println(String.format(CANNOTCASTMESSAGE,user.getName(),getDisplayName()));
+            System.out.println(String.format(MagicConstants.Magic.CANNOTCASTMESSAGE,user.getName(),getDisplayName()));
             return;
         }
-        System.out.println(String.format(CASTMESSAGE,user.getName(),getDisplayName()));
+        System.out.println(String.format(MagicConstants.Magic.CASTMESSAGE,user.getName(),getDisplayName()));
         user.mp -= getConsumptionMp();
     }
 
     /**
-     * @return 表示名
+     * 与ダメージを計算する
+     * @return MAX_DAMAGEとMIN_DAMAGEから計算された与ダメージ
      */
-    public abstract String getDisplayName();
+    protected int  calcDamage() {
+        return ThreadLocalRandom.current().nextInt(getMinDamage(), getMaxDamage() + GlobalConstants.RANGE_INCLUSIVE_OFFSET);
+    }
+
+    public abstract int getMaxDamage();
+
+    public abstract int getMinDamage();
 
     /**
      * @return 消費MP
      */
     public abstract int getConsumptionMp();
+
+    /**
+     * @return 表示名
+     */
+    public abstract String getDisplayName();
 
     /**
      * @return 付与する状態異常

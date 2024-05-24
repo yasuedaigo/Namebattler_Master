@@ -1,19 +1,17 @@
-package masternamebattler.chara.Magic;
+package masternamebattler.Magic;
 
-import java.util.Random;
-import masternamebattler.Constants;
-import masternamebattler.chara.Conditions;
-import masternamebattler.chara.Player;
+import masternamebattler.Chara.Player;
+import masternamebattler.Condition.Conditions;
 
 /**
  * 魔法のひとつ「サンダー」
  * 唱えると35～15のダメージを与える
  */
 public class Thunder extends Magic{
-    public String DISPLAY_NAME = "サンダー";
-    public int CONSUMPTION_MP = 20;
-    public int MAX_DAMAGE = 35;
-    public int MIN_DAMAGE = 15;
+    public final static String DISPLAY_NAME = MagicConstants.Thunder.DISPLAY_NAME;
+    public final static int CONSUMPTION_MP = MagicConstants.Thunder.CONSUMPTION_MP;
+    public final static int MAX_DAMAGE = MagicConstants.Thunder.MAX_DAMAGE;
+    public final static int MIN_DAMAGE = MagicConstants.Thunder.MIN_DAMAGE;
 
     /**
      * 唱えたときの処理
@@ -30,12 +28,11 @@ public class Thunder extends Magic{
     }
 
     /**
-     * 与ダメージを計算する
-     * @return MAX_DAMAGEとMIN_DAMAGEから計算された与ダメージ
+     * @return 消費MP
      */
-    private int  calcDamage() {
-        Random random = new Random();
-        return random.nextInt(MAX_DAMAGE - MIN_DAMAGE + Constants.RANGE_INCLUSIVE_OFFSET) + MIN_DAMAGE;
+    @Override
+    public int getConsumptionMp() {
+        return CONSUMPTION_MP;
     }
 
     /**
@@ -47,18 +44,18 @@ public class Thunder extends Magic{
     }
 
     /**
-     * @return 消費MP
-     */
-    @Override
-    public int getConsumptionMp() {
-        return CONSUMPTION_MP;
-    }
-
-    /**
      * @return 付与する状態異常
      */
     @Override
     public Conditions getGrantCondition() {
         return null;
+    }
+
+    public int getMaxDamage() {
+        return MAX_DAMAGE;
+    }
+
+    public int getMinDamage() {
+        return MIN_DAMAGE;
     }
 }

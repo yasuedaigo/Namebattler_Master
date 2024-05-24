@@ -1,40 +1,29 @@
-package masternamebattler.chara;
+package masternamebattler.Chara;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
-import masternamebattler.Constants;
-import masternamebattler.chara.Magic.Heal;
-import masternamebattler.chara.Magic.Magic;
-import masternamebattler.chara.Magic.Paralysis;
-import masternamebattler.chara.Magic.Poison;
+
+import masternamebattler.GameConstants;
+import masternamebattler.GlobalConstants;
+import masternamebattler.Magic.Heal;
+import masternamebattler.Magic.Magic;
+import masternamebattler.Magic.Paralysis;
+import masternamebattler.Magic.Poison;
 
 /**
  * 僧侶のクラス
  * ヒールとパライズとポイズンを使える
  */
 public class Priest extends Player {
-    // 僧侶のステータスの最大値、最小値
-    public static final int PRIEST_MIN_HP = 80;
-    public static final int PRIEST_MAX_HP = 200;
-    public static final int PRIEST_MIN_MP = 20;
-    public static final int PRIEST_MAX_MP = 50;
-    public static final int PRIEST_MIN_STR = 10;
-    public static final int PRIEST_MAX_STR = 70;
-    public static final int PRIEST_MIN_DEF = 10;
-    public static final int PRIEST_MAX_DEF = 70;
-    public static final int PRIEST_MIN_LUCK = 1;
-    public static final int PRIEST_MAX_LUCK = 100;
-    public static final int PRIEST_MIN_AGI = 20;
-    public static final int PRIEST_MAX_AGI = 60;
-    public static final String DISPLAY_NAME = "僧侶";
+    public static final String DISPLAY_NAME = CharaConstants.Priest.DISPLAY_NAME;
 
     /**
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Priest(Constants.Teams team) {
+    public Priest(GameConstants.Teams team) {
         super(team);
     }
 
@@ -52,12 +41,12 @@ public class Priest extends Player {
      */
     @Override
     public void setStatsu(){
-        this.hp = calcStatus(this.name, PRIEST_MAX_HP, PRIEST_MIN_HP, HP_INDEX);
-        this.mp = calcStatus(this.name, PRIEST_MAX_MP, PRIEST_MIN_MP, MP_INDEX);
-        this.str = calcStatus(this.name, PRIEST_MAX_STR, PRIEST_MIN_STR, STR_INDEX);
-        this.def = calcStatus(this.name, PRIEST_MAX_DEF, PRIEST_MIN_DEF, DEF_INDEX);
-        this.agi = calcStatus(this.name, PRIEST_MAX_AGI, PRIEST_MIN_AGI, AGI_INDEX);
-        this.luck = calcStatus(this.name, PRIEST_MAX_LUCK, PRIEST_MIN_LUCK, LUCK_INDEX);
+        this.hp = calcStatus(this.name, CharaConstants.Priest.MAX_HP, CharaConstants.Priest.MIN_HP, CharaConstants.HP_INDEX);
+        this.mp = calcStatus(this.name, CharaConstants.Priest.MAX_MP, CharaConstants.Priest.MIN_MP, CharaConstants.MP_INDEX);
+        this.str = calcStatus(this.name, CharaConstants.Priest.MAX_STR, CharaConstants.Priest.MIN_STR, CharaConstants.STR_INDEX);
+        this.def = calcStatus(this.name, CharaConstants.Priest.MAX_DEF, CharaConstants.Priest.MIN_DEF, CharaConstants.DEF_INDEX);
+        this.agi = calcStatus(this.name, CharaConstants.Priest.MAX_AGI, CharaConstants.Priest.MIN_AGI, CharaConstants.AGI_INDEX);
+        this.luck = calcStatus(this.name, CharaConstants.Priest.MAX_LUCK, CharaConstants.Priest.MIN_LUCK, CharaConstants.LUCK_INDEX);
     }
 
     /**
@@ -78,7 +67,7 @@ public class Priest extends Player {
     @Override
     public void attack(Player enemy) {
         if(isIncapacitationForParalysis()){
-            System.out.println(String.format(PARALYSIS_MESSAGE, this.name));
+            System.out.println(String.format(CharaConstants.PARALYSIS_MESSAGE, this.name));
             return;
         }
         Magic choicedMagic = null;

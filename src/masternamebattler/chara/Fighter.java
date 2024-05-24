@@ -1,31 +1,20 @@
-package masternamebattler.chara;
+package masternamebattler.Chara;
 
-import masternamebattler.Constants;
+import masternamebattler.GameConstants;
+import masternamebattler.GlobalConstants;
 
 /**
  * 戦士クラス
  */
 public class Fighter extends Player {
     // 戦士のステータスの最大値、最小値
-    public static final int FIGHTER_MIN_HP = 100;
-    public static final int FIGHTER_MAX_HP = 300;
-    public static final int FIGHTER_MIN_MP = 0;
-    public static final int FIGHTER_MAX_MP = 0;
-    public static final int FIGHTER_MIN_STR = 30;
-    public static final int FIGHTER_MAX_STR = 100;
-    public static final int FIGHTER_MIN_DEF = 30;
-    public static final int FIGHTER_MAX_DEF = 100;
-    public static final int FIGHTER_MIN_LUCK = 1;
-    public static final int FIGHTER_MAX_LUCK = 100;
-    public static final int FIGHTER_MIN_AGI = 1;
-    public static final int FIGHTER_MAX_AGI = 50;
-    public static final String DISPLAY_NAME = "戦士";
+    public static final String DISPLAY_NAME = CharaConstants.Fighter.DISPLAY_NAME;
     
     /**
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Fighter(Constants.Teams team) {
+    public Fighter(GameConstants.Teams team) {
         super(team);
     }
 
@@ -34,12 +23,12 @@ public class Fighter extends Player {
      */
     @Override
     public void setStatsu(){
-        this.hp = calcStatus(this.name, FIGHTER_MAX_HP, FIGHTER_MIN_HP,HP_INDEX);
-        this.mp = calcStatus(this.name, FIGHTER_MAX_MP, FIGHTER_MIN_MP, MP_INDEX);
-        this.str = calcStatus(this.name, FIGHTER_MAX_STR, FIGHTER_MIN_STR, STR_INDEX);
-        this.def = calcStatus(this.name, FIGHTER_MAX_DEF, FIGHTER_MIN_DEF, DEF_INDEX);
-        this.agi = calcStatus(this.name, FIGHTER_MAX_AGI, FIGHTER_MIN_AGI, AGI_INDEX);
-        this.luck = calcStatus(this.name, FIGHTER_MAX_LUCK, FIGHTER_MIN_LUCK, LUCK_INDEX);
+        this.hp = calcStatus(this.name, CharaConstants.Fighter.MAX_HP, CharaConstants.Fighter.MIN_HP, CharaConstants.HP_INDEX);
+        this.mp = calcStatus(this.name, CharaConstants.Fighter.MAX_MP, CharaConstants.Fighter.MIN_MP, CharaConstants.MP_INDEX);
+        this.str = calcStatus(this.name, CharaConstants.Fighter.MAX_STR, CharaConstants.Fighter.MIN_STR, CharaConstants.STR_INDEX);
+        this.def = calcStatus(this.name, CharaConstants.Fighter.MAX_DEF, CharaConstants.Fighter.MIN_DEF, CharaConstants.DEF_INDEX);
+        this.agi = calcStatus(this.name, CharaConstants.Fighter.MAX_AGI, CharaConstants.Fighter.MIN_AGI, CharaConstants.AGI_INDEX);
+        this.luck = calcStatus(this.name, CharaConstants.Fighter.MAX_LUCK, CharaConstants.Fighter.MIN_LUCK, CharaConstants.LUCK_INDEX);
     }
 
     /**

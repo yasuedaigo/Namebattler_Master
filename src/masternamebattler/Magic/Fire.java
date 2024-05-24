@@ -1,19 +1,17 @@
-package masternamebattler.chara.Magic;
+package masternamebattler.Magic;
 
-import java.util.Random;
-import masternamebattler.Constants;
-import masternamebattler.chara.Conditions;
-import masternamebattler.chara.Player;
+import masternamebattler.Chara.Player;
+import masternamebattler.Condition.Conditions;
 
 /**
  * 魔法のひとつ「ファイア」
  * 10～30のダメージを与える
  */
 public class Fire extends Magic{
-    public String DISPLAY_NAME = "ファイア";
-    public int CONSUMPTION_MP = 10;
-    public int MAX_DAMAGE = 30;
-    public int MIN_DAMAGE = 10;
+    public static final String DISPLAY_NAME = MagicConstants.Fire.DISPLAY_NAME;
+    public static final int CONSUMPTION_MP = MagicConstants.Fire.CONSUMPTION_MP;
+    public static final int MAX_DAMAGE = MagicConstants.Fire.MAX_DAMAGE;
+    public static final int MIN_DAMAGE = MagicConstants.Fire.MIN_DAMAGE;
 
     /**
      * 唱えたときの処理
@@ -30,12 +28,11 @@ public class Fire extends Magic{
     }
 
     /**
-     * 与ダメージを計算する
-     * @return MAX_DAMAGEとMIN_DAMAGEから計算された与ダメージ
+     * @return 消費MP
      */
-    private int  calcDamage() {
-        Random random = new Random();
-        return random.nextInt(MAX_DAMAGE - MIN_DAMAGE + Constants.RANGE_INCLUSIVE_OFFSET) + MIN_DAMAGE;
+    @Override
+    public int getConsumptionMp() {
+        return CONSUMPTION_MP;
     }
 
     /**
@@ -47,18 +44,18 @@ public class Fire extends Magic{
     }
 
     /**
-     * @return 消費MP
-     */
-    @Override
-    public int getConsumptionMp() {
-        return CONSUMPTION_MP;
-    }
-
-    /**
      * @return 付与する状態異常
      */
     @Override
     public Conditions getGrantCondition() {
         return null;
+    }
+
+    public int getMaxDamage() {
+        return MAX_DAMAGE;
+    }
+
+    public int getMinDamage() {
+        return MIN_DAMAGE;
     }
 }
