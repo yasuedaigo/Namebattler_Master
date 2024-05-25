@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import masternamebattler.Chara.CharacterType;
 import masternamebattler.Chara.Player;
-import masternamebattler.Condition.Conditions;
+import masternamebattler.Console.ConsoleManager;
 import masternamebattler.GameConstants.Teams;
 import masternamebattler.Util.UserInput.UserInput;
 
@@ -14,7 +14,6 @@ import masternamebattler.Util.UserInput.UserInput;
 public class GameManager {
     private final int START_TURN_COUNT = 1;
 
-    public ArrayList<Player> playerList = new ArrayList<Player>();
     public Player mainPlayer;
     public Player enemyPlayer;
     public Party party;
@@ -28,91 +27,62 @@ public class GameManager {
      */
     public void start() {
         party = new Party();
-        prepairPlayers();
-        party.appendPlayer(mainPlayer);
-        party.appendPlayer(enemyPlayer);
+        makeParty(Teams.PLAYER);
+        makeParty(Teams.ENEMY);
         party.sortPlayerListForAgi();
-        Player firstPlayer = playerList.get(0);
-        Player secondPlayer = playerList.get(1);
-
-        turnCount = START_TURN_COUNT;
-        System.out.println(GlobalConstants.BLANK_LINE);
-        while(!checkGameEnd()){
-            turnStartProcess(party);
-            UserInput.waitForEnter();
-            turnProxess();
-            if(checkGameEnd()){
-                break;
-            }
-            UserInput.waitForEnter();
-            turnEndProcess();
-        }
         
-
         turnCount = START_TURN_COUNT;
         System.out.println(GlobalConstants.BLANK_LINE);
-        while(!checkGameEnd()){
-            
-            System.out.println(String.format(GameConstants.TURN_COUNT_MESSAGE, turnCount));
-            firstPlayer.attack(secondPlayer);
-            if(checkGameEnd()){
+        while(!party.checkGameEnd()){
+            turnStartProcess();
+            turnProcess();
+            if(party.checkGameEnd()){
                 break;
             }
-            secondPlayer.attack(firstPlayer);
             turnEndProcess();
-            System.out.println(GlobalConstants.PARTITION);
         }
         gameFinish();
     }
 
-    public void turmStartProcess(){
+    public void turnStartProcess(){
         System.out.println(String.format(GameConstants.TURN_COUNT_MESSAGE, turnCount));
         party.showMembers();
     }
 
-    public void turnProxess(){
+    public void turnProcess(){
         while(!party.checkTurnEnd() && !party.checkGameEnd()){
             Player attacker = party.getAttacker();
-            Player defender = party.getDefender();
+            Player defender = party.getDefender(attacker);
             UserInput.waitForEnter();
             attacker.attack(defender);
-            UserInput.waitForEnter();
+            ConsoleManager.printParty(party);
         }
     }
 
     /**
+     * 
      * プレイヤーを2名作成しリストに加える
      */
-    private void prepairPlayers(){
-        for(int i = 0; i < GameConstants.NUMBER_OF_TEAM_MENBERS; i++){
-            Player player = makePlayer(Teams.PLAYER);
-            playerList.add(player);
-        }
-        for(int i = 0; i < GameConstants.NUMBER_OF_TEAM_MENBERS; i++){
-            Player player = makePlayer(Teams.ENEMY);
-            playerList.add(player);
-        }
-        mainPlayer = makePlayer(Teams.PLAYER);
-        enemyPlayer = makePlayer(Teams.ENEMY);
-        
-        playerList.add(mainPlayer);
-        playerList.add(enemyPlayer);
-        for (Player player : playerList) {
-            player.showInfo();
+    /*
+    private void makeParty(Teams team){
+        for (int i = 0; i < GameConstants.NUMBER_OF_TEAM_MEMBERS; i++) {
+            Player player = makePlayer(team);
+            party.appendPlayer(player);
         }
     }
+    */
 
-    /**
-     * ジョブを入力してもらい、プレイヤーを作成する
-     * @param team プレイヤーの所属するチーム
-     * @return 作成したプレイヤー
-     */
     private Player makePlayer(Teams team){
-        int jobInt = choiceJobForinput();
-        CharacterType selectedClass = CharacterType.fromId(jobInt);
-        return selectedClass.createPlayer(team);
+        int jobId = choiceJobForinput();
+        String name = decideNameForInput();
+        return CharacterType.createPlayer(jobId, name, team);
     }
 
+    private String decideNameForInput(){
+        System.out.println(GameConstants.DECIDE_NAME_MESSAGE);
+        return UserInput.inputString();
+    }
+    
     /**
      * ジョブ選択を入力してもらう
      * 選択肢を表示し、入力値を検証し、正しい入力が行われるまで繰り返す
@@ -141,34 +111,11 @@ public class GameManager {
     }
 
     /**
-     * プレイヤーリストを素早さの降順に並び替える
-     */
-    private void sortPlayerList(){
-        playerList.sort((player1, player2) -> Integer.compare(player2.getAgi(), player1.getAgi()));
-    }
-
-    /**
-     * ゲームが終了しているかを判定する
-     * @return どちらかのプレイヤーが倒れている場合はtrue
-     */
-    private boolean checkGameEnd(){
-        for (Player player : playerList) {
-            if(!player.getIsLive()){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * ゲーム終了時のメッセージを表示する
      */
     private void gameFinish(){
-        for (Player player : playerList) {
-            if(player.getIsLive()){
-                System.out.println(String.format(GameConstants.GAME_FINISH_MESSAGE, player.getName()));
-            }
-        }
+        Teams winTeam = party.getWinner();
+        System.out.println(String.format(GameConstants.GAME_FINISH_MESSAGE, winTeam));
     }
 
     /**
@@ -176,24 +123,18 @@ public class GameManager {
      * 状態異常のダメージ処理を行い、ターン数を進める
      */
     private void turnEndProcess(){
-        if(checkGameEnd()){
-            return;
-        }
-        for (Player player : playerList) {
-            if(player.getCondition() == Conditions.POISON){
-                player.poisonDamage();
-            }
-        }
-        showHP();
+        party.poisonDamage();
         turnCount++;
+        System.out.println(GlobalConstants.PARTITION);
     }
 
-    /**
-     * 全プレイヤーのHPを表示する
-     */
-    private void showHP(){
-        for (Player player : playerList) {
-            player.showHp();
-        }
+    //  デバック用
+    private void makeParty(Teams team){
+        Player player = CharacterType.createPlayer(1, "プレイヤー1", team);
+        party.appendPlayer(player);
+        player = CharacterType.createPlayer(2, "プレイヤー2", team);
+        party.appendPlayer(player);
+        player = CharacterType.createPlayer(3, "プレイヤー3", team);
+        party.appendPlayer(player);
     }
 }

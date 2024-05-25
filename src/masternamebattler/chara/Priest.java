@@ -23,8 +23,8 @@ public class Priest extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Priest(GameConstants.Teams team) {
-        super(team);
+    public Priest(String name,GameConstants.Teams team) {
+        super(name,team);
     }
 
     /**
@@ -40,7 +40,7 @@ public class Priest extends Player {
      * ステータスを計算してセットする
      */
     @Override
-    public void setStatsu(){
+    public void setStatsu(String name){
         this.hp = calcStatus(this.name, CharaConstants.Priest.MAX_HP, CharaConstants.Priest.MIN_HP, CharaConstants.HP_INDEX);
         this.mp = calcStatus(this.name, CharaConstants.Priest.MAX_MP, CharaConstants.Priest.MIN_MP, CharaConstants.MP_INDEX);
         this.str = calcStatus(this.name, CharaConstants.Priest.MAX_STR, CharaConstants.Priest.MIN_STR, CharaConstants.STR_INDEX);

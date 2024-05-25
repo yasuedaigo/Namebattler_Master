@@ -66,12 +66,4 @@ public  class UserInput{
     public static void closeScanner() {
         scanner.close();
     }
-
-    
-    
-    /* 
-    public void showInput(int inputInt){
-        System.out.println(String.format(UtilConstants.SHOW_INPUT_INT_MESSAGE,inputInt));
-    }
-    */
 }

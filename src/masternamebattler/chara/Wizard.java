@@ -23,8 +23,8 @@ public class Wizard extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Wizard(GameConstants.Teams team) {
-        super(team);
+    public Wizard(String name,GameConstants.Teams team) {
+        super(name,team);
     }
 
     /**
@@ -39,7 +39,7 @@ public class Wizard extends Player {
      * ステータスを計算してセットする
      */
     @Override
-    public void setStatsu(){
+    public void setStatsu(String name){
         this.hp = calcStatus(this.name, CharaConstants.Wizard.MAX_HP, CharaConstants.Wizard.MIN_HP, CharaConstants.HP_INDEX);
         this.mp = calcStatus(this.name, CharaConstants.Wizard.MAX_MP, CharaConstants.Wizard.MIN_MP, CharaConstants.MP_INDEX);
         this.str = calcStatus(this.name, CharaConstants.Wizard.MAX_STR, CharaConstants.Wizard.MIN_STR, CharaConstants.STR_INDEX);

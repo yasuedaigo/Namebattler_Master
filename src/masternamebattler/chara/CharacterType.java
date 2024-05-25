@@ -1,6 +1,6 @@
 package masternamebattler.Chara;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import masternamebattler.GlobalConstants;
 import masternamebattler.GameConstants;
@@ -17,7 +17,7 @@ import masternamebattler.GameConstants;
 
             private final int id;
             private final String displayName;
-            private final Function<GameConstants.Teams, Player> playerConstructor;
+            private final BiFunction<String,GameConstants.Teams, Player> playerConstructor;
 
             /**
              * コンストラクタ
@@ -25,7 +25,7 @@ import masternamebattler.GameConstants;
              * @param displayName 表示名
              * @param playerConstructor プレイヤーのコンストラクタ
              */
-            CharacterType(int id, String displayName, Function<GameConstants.Teams, Player> playerConstructor) {
+            CharacterType(int id, String displayName, BiFunction<String,GameConstants.Teams, Player> playerConstructor) {
                 this.id = id;
                 this.displayName = displayName;
                 this.playerConstructor = playerConstructor;
@@ -50,22 +50,14 @@ import masternamebattler.GameConstants;
              * @param useTeam プレイヤーの所属するチーム
              * @return プレイヤーのインスタンス
              */
-            public Player createPlayer(GameConstants.Teams useTeam) {
-                return playerConstructor.apply(useTeam);
-            }
-
-            /**
-             * IDから職業を取得する
-             * @param id 職業のID
-             * @return 職業
-             */
-            public static CharacterType fromId(int id) {
-                for (CharacterType characterClass : CharacterType.values()) {
-                    if (characterClass.getId() == id) {
-                        return characterClass;
+            public static Player createPlayer(int jobId, String name,GameConstants.Teams useTeam) {
+                Player player = null;
+                for (CharacterType characterClass : values()) {
+                    if (characterClass.getId() == jobId) {
+                        player =  characterClass.playerConstructor.apply(name,useTeam);
                     }
                 }
-                return null;
+                return player;
             }
 
             /**

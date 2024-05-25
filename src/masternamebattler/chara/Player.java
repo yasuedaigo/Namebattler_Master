@@ -24,6 +24,7 @@ public abstract class Player {
     public int luck;
     public int agi;
     public boolean isLive;
+    public boolean isAtaccked;
     public GameConstants.Teams team;
     public Conditions condition;
     
@@ -32,27 +33,14 @@ public abstract class Player {
      * 名前を入力してもらい、ステータスを計算してセットする
      * @param useTeam プレイヤーの所属するチーム
      */
-    public Player(GameConstants.Teams useTeam) {
-        this.name = decideNameForInput();
-        this.setStatsu();
+    public Player(String name,GameConstants.Teams useTeam) {
+        this.name = name;
+        this.setStatsu(this.name);
         this.isLive = true;
         this.team = useTeam;
     }
 
-    /**
-     * 入力によって名前を決定する
-     * 入力が空でなくなるまで繰り返す
-     * @return 入力された名前
-     */
-    protected String decideNameForInput() {
-        Scanner scanner = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-        System.out.println(CharaConstants.DECIDE_NAME_MESSAGE);
-        String input = null;
-        do{
-            input = scanner.nextLine();
-        }while(!validateName(input));
-        return input;
-    }
+    
 
     /**
      * @param value 入力された名前
@@ -188,11 +176,32 @@ public abstract class Player {
         }
     }
 
+
+    public void setIsLive(boolean isLive){
+        this.isLive = isLive;
+    }
+
     /**
      * @return 倒れていない場合はtrue
      */
     public boolean getIsLive(){
         return this.isLive;
+    }
+
+    public void setIsAttacked(boolean isAttacked){
+        this.isAtaccked = isAttacked;
+    }
+
+    public boolean getIsAttacked(){
+        return this.isAtaccked;
+    }
+
+    public void setTeam(GameConstants.Teams team){
+        this.team = team;
+    }
+
+    public GameConstants.Teams getTeam(){
+        return this.team;
     }
 
     /**
@@ -254,5 +263,5 @@ public abstract class Player {
     /**
      * ステータスをセットする
      */
-    public abstract void setStatsu();
+    public abstract void setStatsu(String name);
 }

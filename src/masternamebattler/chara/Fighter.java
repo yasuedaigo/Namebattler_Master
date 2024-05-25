@@ -14,15 +14,15 @@ public class Fighter extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Fighter(GameConstants.Teams team) {
-        super(team);
+    public Fighter(String name,GameConstants.Teams team) {
+        super(name,team);
     }
 
     /**
      * ステータスを計算してセットする
      */
     @Override
-    public void setStatsu(){
+    public void setStatsu(String name){
         this.hp = calcStatus(this.name, CharaConstants.Fighter.MAX_HP, CharaConstants.Fighter.MIN_HP, CharaConstants.HP_INDEX);
         this.mp = calcStatus(this.name, CharaConstants.Fighter.MAX_MP, CharaConstants.Fighter.MIN_MP, CharaConstants.MP_INDEX);
         this.str = calcStatus(this.name, CharaConstants.Fighter.MAX_STR, CharaConstants.Fighter.MIN_STR, CharaConstants.STR_INDEX);

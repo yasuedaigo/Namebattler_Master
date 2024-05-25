@@ -15,15 +15,15 @@ public class Ninja extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Ninja(GameConstants.Teams team) {
-        super(team);
+    public Ninja(String name,GameConstants.Teams team) {
+        super(name,team);
     }
 
     /**
      * ステータスを計算してセットする
      */
     @Override
-    public void setStatsu(){
+    public void setStatsu(String name){
         this.hp = calcStatus(this.name, CharaConstants.Ninja.MAX_HP, CharaConstants.Ninja.MIN_HP, CharaConstants.HP_INDEX);
         this.mp = calcStatus(this.name, CharaConstants.Ninja.MAX_MP, CharaConstants.Ninja.MIN_MP, CharaConstants.MP_INDEX);
         this.str = calcStatus(this.name, CharaConstants.Ninja.MAX_STR, CharaConstants.Ninja.MIN_STR, CharaConstants.STR_INDEX);

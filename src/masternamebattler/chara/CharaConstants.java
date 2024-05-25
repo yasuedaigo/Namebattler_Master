@@ -9,7 +9,6 @@ public class CharaConstants {
     public static final String USE_MAGIC_MESSAGE = "%sは%sを使った！";
     public static final String PARALYSIS_MESSAGE = "%sは麻痺して動けなかった！";
     public static final String POISON_DAMAGE_MESSAGE = "%sは毒によりダメージを受けた！";
-    public static final String DECIDE_NAME_MESSAGE = "名前を入力してください";
     public static final String INVALID_NAME_MESSAGE = "入力が正しくありません";
     public static final String SET_CONDITION_MESSAGE = "%sは%sにかかった！";
     public static final String SHOW_HP_MESSAGE = "%s HP:%d";
