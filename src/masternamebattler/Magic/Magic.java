@@ -2,9 +2,11 @@ package masternamebattler.Magic;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import masternamebattler.GameManager;
 import masternamebattler.GlobalConstants;
 import masternamebattler.Chara.Player;
 import masternamebattler.Condition.Conditions;
+import masternamebattler.Console.ConsoleManager;
 
 /**
  * 魔法の抽象クラス
@@ -29,10 +31,10 @@ public abstract class Magic{
      */
     public void cast(Player user, Player enemy){
         if(user.mp < getConsumptionMp()) {
-            System.out.println(String.format(MagicConstants.Magic.CANNOTCASTMESSAGE,user.getName(),getDisplayName()));
+            GameManager.consoleManager.addLogText(String.format(MagicConstants.Magic.CANNOTCASTMESSAGE,user.getName(),getDisplayName()));
             return;
         }
-        System.out.println(String.format(MagicConstants.Magic.CASTMESSAGE,user.getName(),getDisplayName()));
+        GameManager.consoleManager.addLogText(String.format(MagicConstants.Magic.CASTMESSAGE,user.getName(),getDisplayName()));
         user.mp -= getConsumptionMp();
     }
 

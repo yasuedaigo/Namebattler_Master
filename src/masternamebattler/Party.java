@@ -50,14 +50,17 @@ public class Party {
         members.sort((player1, player2) -> player2.getAgi() - player1.getAgi());
     }
 
-    public void showMembers() {
-        System.out.println("------------------------------");
-        System.out.println("現在の状況");
+    /*
+     * public void showMembers() {
+        GameManager.consoleManager.addPlayLog("------------------------------");
+        GameManager.consoleManager.addPlayLog("現在の状況");
         for (Player player : members) {
             player.showInfo();
         }
-        System.out.println("------------------------------");
+        GameManager.consoleManager.addPlayLog("------------------------------");
     }
+     */
+    
 
     /**
      * 次に攻撃するプレイヤーを取得する
@@ -139,5 +142,25 @@ public class Party {
             }
         }
         return null; // 生きているプレイヤーがいない場合は null を返す
+    }
+
+    public List<Player> getMembers(Teams team) {
+        return members.stream()
+                .filter(player -> player.getTeam() == team)
+                .collect(Collectors.toList());
+    }
+        
+    public Player getPlayer(Teams team, int index){
+        List<Player> teamMembers = getMembers(team);
+        if (index < teamMembers.size()) {
+            return teamMembers.get(index);
+        }
+        return null;
+    }
+
+    public void resetIsAttacked(){
+        for (Player player : members) {
+            player.setIsAttacked(false);
+        }
     }
 }

@@ -1,21 +1,108 @@
 package masternamebattler.Console;
 
-import masternamebattler.GameConstants.Teams;
-import masternamebattler.Chara.Player;
+import masternamebattler.GameConstants;
+import masternamebattler.GlobalConstants;
 import masternamebattler.Party;
+import masternamebattler.Chara.Player;
+
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import masternamebattler.GameConstants.Teams;
 
 public class ConsoleManager {
-    // カラムの幅
-    private static final int COLUMN_WIDTH = 20;
-
-    // ANSIエスケープシーケンス
-    private static final String ANSI_RESET = "\u001B[0m";
-    private static final String ANSI_CLEAR = "\u001B[2J";
+    private static final String ANSI_CLEAR = "\033[H\033[2J";
     private static final String ANSI_HOME = "\u001B[H";
-    private static final String ANSI_SAVE_CURSOR = "\u001B[s";
-    private static final String ANSI_RESTORE_CURSOR = "\u001B[u";
+    private static final int MAX_LOG_LINES = 10; // ログの最大表示行数
+
+    public List<String> logList = new ArrayList<>();
+
+    ConsoleComponent baseComponent = new ConsoleComponent();
+    ConsoleComponent topComponent = new ConsoleComponent();
+    ConsoleComponent playerTeamTagComponent = new ConsoleComponent();
+    ConsoleComponent playerTeamBaseComponent = new ConsoleComponent();
+    ConsoleComponent partitinComponent = new ConsoleComponent();
+    ConsoleComponent enemyTeamBaseComponent = new ConsoleComponent();
+    ConsoleComponent enemyTeamTagComponent = new ConsoleComponent();
+    ConsoleComponent playLogComponent = new ConsoleComponent();
+
+    public ConsoleManager(){
+        buildComponent();
+        partitinComponent.setText(GlobalConstants.PARTITION);
+    }
+
+    public void buildComponent() {
+        buildTeamBaseComponent(playerTeamBaseComponent);
+        buildTeamBaseComponent(enemyTeamBaseComponent);
+
+        int row = 0;
+        int column = 0;
+        baseComponent.addComponent(topComponent, row, column);
+        row++;
+        baseComponent.addComponent(playerTeamTagComponent, row, column);
+        row++;
+        baseComponent.addComponent(playerTeamBaseComponent, row, column);
+        row++;
+        baseComponent.addComponent(partitinComponent, row, column);
+        row++;
+        baseComponent.addComponent(enemyTeamBaseComponent, row, column);
+        row++;
+        baseComponent.addComponent(enemyTeamTagComponent, row, column);
+        row++;
+        baseComponent.addComponent(partitinComponent, row, column);
+        row++;
+        baseComponent.addComponent(playLogComponent, row, column);
+    }
+
+    public void setTextAllComponent(Party party) {
+        topComponent.setText("topComponent");
+        playerTeamTagComponent.setText("Player");
+        enemyTeamTagComponent.setText("ENEMY");
+        setTextPlayerComponent(party);
+    }
+
+    public void setTextPlayerComponent(Party party) {
+        List<ConsoleComponent> playerComponentList = playerTeamBaseComponent.components.get(0);
+        List<ConsoleComponent> enemyComponentList = enemyTeamBaseComponent.components.get(0);
+        for (int i = 0; i < GameConstants.NUMBER_OF_TEAM_MEMBERS; i++) {
+            Player player = party.getPlayer(Teams.PLAYER, i);
+            if (player != null) {
+                playerComponentList.get(i).setText(player);
+            }
+        }
+        for (int i = 0; i < GameConstants.NUMBER_OF_TEAM_MEMBERS; i++) {
+            Player enemy = party.getPlayer(Teams.ENEMY, i);
+            if (enemy != null) {
+                enemyComponentList.get(i).setText(enemy);
+            }
+        }
+    }
+
+    public void printLog(Party party) {
+        clearConsole();
+        setTextAllComponent(party);
+        baseComponent.print(1, 2, 100); // widthを適切に設定
+    }
+
+    public void addLogText(String log) {
+        logList.add(log);
+        if (logList.size() > MAX_LOG_LINES) {
+            logList.remove(0); // 古いログを削除
+        }
+        StringBuilder logText = new StringBuilder();
+        for (String logEntry : logList) {
+            logText.append(logEntry).append("\n");
+        }
+        playLogComponent.setText(logText.toString());
+        baseComponent.print(1, 2, 100);
+    }
+
+    public void buildTeamBaseComponent(ConsoleComponent teamBaseConsoleComponent) {
+        int row = 0;
+        for (int i = 0; i < GameConstants.NUMBER_OF_TEAM_MEMBERS; i++) {
+            PlayerComponent playerComponent = new PlayerComponent();
+            teamBaseConsoleComponent.addComponent(playerComponent, row, i);
+        }
+    }
 
     /**
      * コンソールをクリアしてカーソルをホーム位置に移動
@@ -24,134 +111,4 @@ public class ConsoleManager {
         System.out.print(ANSI_CLEAR);
         System.out.print(ANSI_HOME);
     }
-
-    /**
-     * カーソル位置を保存
-     */
-    public void saveCursorPosition() {
-        System.out.print(ANSI_SAVE_CURSOR);
-    }
-
-    /**
-     * 保存されたカーソル位置を復元
-     */
-    public void restoreCursorPosition() {
-        System.out.print(ANSI_RESTORE_CURSOR);
-    }
-
-    /**
-     * 指定した行にカーソルを移動
-     * @param row 行番号（1から始まる）
-     */
-    public void moveToRow(int row) {
-        System.out.printf("\u001B[%d;1H", row);
-    }
-
-    /**
-     * メッセージを指定した行に表示
-     * @param row 行番号（1から始まる）
-     * @param message 表示するメッセージ
-     */
-    public void printAtRow(int row, String message) {
-        moveToRow(row);
-        System.out.print(message);
-    }
-
-    /**
-     * パーティーメンバーの情報を表示する
-     * @param party パーティー
-     */
-    public static void printParty(Party party) {
-        List<Player> members = party.getMembers();
-
-        // Separate players by teams
-        List<Player> playerTeamMembers = members.stream()
-                .filter(player -> player.getTeam() == Teams.PLAYER)
-                .collect(Collectors.toList());
-
-        List<Player> enemyTeamMembers = members.stream()
-                .filter(player -> player.getTeam() == Teams.ENEMY)
-                .collect(Collectors.toList());
-
-        // Collect player information in columns
-        String[] playerColumns = getPlayerColumns(playerTeamMembers);
-        String[] enemyColumns = getPlayerColumns(enemyTeamMembers);
-
-        // Print player team
-        System.out.println("PLAYER TEAM");
-        for (String line : playerColumns) {
-            System.out.println(line);
-        }
-
-        System.out.println("\n****************************************\n");
-
-        // Print enemy team
-        System.out.println("ENEMY TEAM");
-        for (String line : enemyColumns) {
-            System.out.println(line);
-        }
-    }
-
-    /**
-     * プレイヤー情報を列ごとに取得する
-     * @param players プレイヤーリスト
-     * @return 各列のプレイヤー情報
-     */
-    private static String[] getPlayerColumns(List<Player> players) {
-        int maxLines = 11; // Number of lines of player information
-        String[] columns = new String[maxLines];
-
-        for (int i = 0; i < maxLines; i++) {
-            columns[i] = "";
-        }
-
-        for (Player player : players) {
-            columns[0] += padRight(player.getName() + " (" + player.getDisplayJobName() + ")", COLUMN_WIDTH);
-            columns[1] += padRight(" HP: " + player.hp, COLUMN_WIDTH);
-            columns[2] += padRight(" MP: " + player.mp, COLUMN_WIDTH);
-            columns[3] += padRight(" STR: " + player.str, COLUMN_WIDTH);
-            columns[4] += padRight(" DEF: " + player.def, COLUMN_WIDTH);
-            columns[5] += padRight(" AGI: " + player.agi, COLUMN_WIDTH);
-            columns[6] += padRight(" LUCK: " + player.luck, COLUMN_WIDTH);
-            columns[7] += padRight(" isLive: " + player.getIsLive(), COLUMN_WIDTH);
-            columns[8] += padRight(" isAttacked: " + player.getIsAttacked(), COLUMN_WIDTH);
-            columns[9] += padRight(" Team: " + player.getTeam(), COLUMN_WIDTH);
-            columns[10] += padRight(" Condition: " + (player.getCondition() != null ? player.getCondition().getDisplayName() : "None"), COLUMN_WIDTH);
-        }
-
-        return columns;
-    }
-
-    /**
-     * 指定された幅で文字列を右に詰める
-     * @param s 文字列
-     * @param n 幅
-     * @return 幅を揃えた文字列
-     */
-    private static String padRight(String s, int n) {
-        int len = getStringWidth(s);
-        if (len < n) {
-            return s + " ".repeat(n - len);
-        }
-        return s;
-    }
-
-    /**
-     * 文字列の幅を計算する
-     * 全角文字は2として計算する
-     * @param s 文字列
-     * @return 幅
-     */
-    private static int getStringWidth(String s) {
-        int width = 0;
-        for (char c : s.toCharArray()) {
-            if (String.valueOf(c).getBytes().length > 1) {
-                width += 2;
-            } else {
-                width += 1;
-            }
-        }
-        return width;
-    }
 }
-

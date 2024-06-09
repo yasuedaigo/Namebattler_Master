@@ -3,6 +3,8 @@ package masternamebattler.Util.UserInput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import masternamebattler.GameManager;
+import masternamebattler.Console.ConsoleManager;
 import masternamebattler.Util.UtilConstants;
 
 import java.util.Collections;
@@ -19,7 +21,7 @@ public  class UserInput{
             if(validValues.contains(inputInt)){
                 break;
             }
-            System.out.println(UtilConstants.INVALID_RANGE_MESSAGE);
+            GameManager.consoleManager.addLogText(UtilConstants.INVALID_RANGE_MESSAGE);
         }while(!validValues.contains(inputInt));
         return inputInt;
     }
@@ -30,14 +32,14 @@ public  class UserInput{
             try {
                 inputString = scanner.nextLine();
             } catch (NoSuchElementException e) {
-                System.out.println(UtilConstants.NO_ELEMENT_MESSAGE);
+                GameManager.consoleManager.addLogText(UtilConstants.NO_ELEMENT_MESSAGE);
             } catch (IllegalStateException e) {
-                System.out.println(UtilConstants.SCANNER_CLOSED_MESSAGE);
+                GameManager.consoleManager.addLogText(UtilConstants.SCANNER_CLOSED_MESSAGE);
                 break;
             }
 
             if(inputString.isEmpty()){
-                System.out.println(UtilConstants.NO_ELEMENT_MESSAGE);
+                GameManager.consoleManager.addLogText(UtilConstants.NO_ELEMENT_MESSAGE);
             }
         }
         return inputString;
@@ -52,14 +54,14 @@ public  class UserInput{
                 inputInt = Integer.parseInt(input);
                 validInput = true;
             } catch (NumberFormatException e) {
-                System.out.println(UtilConstants.INVALID_INTEGER_MESSAGE);
+                GameManager.consoleManager.addLogText(UtilConstants.INVALID_INTEGER_MESSAGE);
             }
         } while(!validInput);
         return inputInt;
     }
 
     public static void waitForEnter() {
-        System.out.println(UtilConstants.WAIT_ENTER);
+        GameManager.consoleManager.addLogText(UtilConstants.WAIT_ENTER);
         scanner.nextLine();
     }
 

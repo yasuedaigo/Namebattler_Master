@@ -27,7 +27,7 @@ public class Poison extends Magic{
     @Override
     public void cast(Player user, Player enemy) {
         super.cast(user, enemy);
-        enemy.setCondisions(Conditions.POISON);
+        enemy.setCondition(Conditions.POISON);
     }
 
     /**

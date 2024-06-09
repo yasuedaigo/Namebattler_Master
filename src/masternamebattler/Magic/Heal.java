@@ -1,5 +1,6 @@
 package masternamebattler.Magic;
 
+import masternamebattler.GameManager;
 import masternamebattler.Chara.Player;
 import masternamebattler.Condition.Conditions;
 
@@ -20,7 +21,7 @@ public class Heal  extends Magic{
     public void cast(Player user, Player enemy) {
         super.cast(user, enemy);
         user.hp += HEAL_HP;
-        System.out.println(String.format(MagicConstants.Heal.HEAL_MESSAGE, user.name, HEAL_HP));
+        GameManager.consoleManager.addLogText(String.format(MagicConstants.Heal.HEAL_MESSAGE, user.name, HEAL_HP));
     }
 
     /**

@@ -6,6 +6,8 @@ import masternamebattler.Chara.CharacterType;
 import masternamebattler.Chara.Player;
 import masternamebattler.Console.ConsoleManager;
 import masternamebattler.GameConstants.Teams;
+import masternamebattler.Tactics.Tactics;
+import masternamebattler.Tactics.TacticsType;
 import masternamebattler.Util.UserInput.UserInput;
 
 /**
@@ -14,25 +16,29 @@ import masternamebattler.Util.UserInput.UserInput;
 public class GameManager {
     private final int START_TURN_COUNT = 1;
 
+    public static ConsoleManager consoleManager = new ConsoleManager();
     public Player mainPlayer;
     public Player enemyPlayer;
     public Party party;
     public int turnCount;
     public boolean isGameEnd = false;    
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_GREEN = "\u001B[32m";
+
     /**
      * ゲームを開始する
      * キャラクターを作成し、ゲームが終了するまでターンを進める
      */
     public void start() {
         party = new Party();
+        /*
         makeParty(Teams.PLAYER);
         makeParty(Teams.ENEMY);
+        */
+        makeParty(Teams.PLAYER);
+        makeParty(Teams.ENEMY);
+        //makePartyenemy(Teams.ENEMY);
         party.sortPlayerListForAgi();
         
         turnCount = START_TURN_COUNT;
-        System.out.println(GlobalConstants.BLANK_LINE);
         while(!party.checkGameEnd()){
             turnStartProcess();
             turnProcess();
@@ -45,17 +51,18 @@ public class GameManager {
     }
 
     public void turnStartProcess(){
-        System.out.println(String.format(GameConstants.TURN_COUNT_MESSAGE, turnCount));
-        party.showMembers();
+        consoleManager.addLogText(String.format(GameConstants.TURN_COUNT_MESSAGE, turnCount));
+        consoleManager.printLog(party);
     }
 
     public void turnProcess(){
         while(!party.checkTurnEnd() && !party.checkGameEnd()){
             Player attacker = party.getAttacker();
-            Player defender = party.getDefender(attacker);
+            Player defender = attacker.getTactics().getTargetPlayer(party, attacker);
             UserInput.waitForEnter();
             attacker.attack(defender);
-            ConsoleManager.printParty(party);
+            attacker.afterAttackProcess();
+            consoleManager.printLog(party);
         }
     }
 
@@ -63,23 +70,25 @@ public class GameManager {
      * 
      * プレイヤーを2名作成しリストに加える
      */
-    /*
+    
     private void makeParty(Teams team){
         for (int i = 0; i < GameConstants.NUMBER_OF_TEAM_MEMBERS; i++) {
             Player player = makePlayer(team);
             party.appendPlayer(player);
         }
     }
-    */
+    
 
     private Player makePlayer(Teams team){
         int jobId = choiceJobForinput();
         String name = decideNameForInput();
-        return CharacterType.createPlayer(jobId, name, team);
+        Tactics tactics = choiceTacticsForInput();
+
+        return CharacterType.createPlayer(jobId, name, team, tactics);
     }
 
     private String decideNameForInput(){
-        System.out.println(GameConstants.DECIDE_NAME_MESSAGE);
+        consoleManager.addLogText(GameConstants.DECIDE_NAME_MESSAGE);
         return UserInput.inputString();
     }
     
@@ -104,9 +113,16 @@ public class GameManager {
     }
 
     private void showSelectJobMessage(){
-        System.out.println(GameConstants.SELECT_JOB_MESSAGE);
+        consoleManager.addLogText(GameConstants.SELECT_JOB_MESSAGE);
         for (CharacterType characterClass : CharacterType.values()) {
-            System.out.println(characterClass.getId() + ": " + characterClass.getDisplayName());
+            consoleManager.addLogText(characterClass.getId() + ": " + characterClass.getDisplayName());
+        }
+    }
+
+    private void showSelectTacticsMessage(){
+        consoleManager.addLogText(GameConstants.SELECT_TACTICS_MESSAGE);
+        for (TacticsType tacticsClass : TacticsType.values()) {
+            consoleManager.addLogText(tacticsClass.getId() + ": " + tacticsClass.getDisplayName());
         }
     }
 
@@ -115,7 +131,8 @@ public class GameManager {
      */
     private void gameFinish(){
         Teams winTeam = party.getWinner();
-        System.out.println(String.format(GameConstants.GAME_FINISH_MESSAGE, winTeam));
+        consoleManager.addLogText(String.format(GameConstants.GAME_FINISH_MESSAGE, winTeam));
+        consoleManager.printLog(party);
     }
 
     /**
@@ -124,17 +141,44 @@ public class GameManager {
      */
     private void turnEndProcess(){
         party.poisonDamage();
+        party.resetIsAttacked();
         turnCount++;
-        System.out.println(GlobalConstants.PARTITION);
+        consoleManager.addLogText(GlobalConstants.PARTITION);
     }
 
     //  デバック用
+    /*
     private void makeParty(Teams team){
-        Player player = CharacterType.createPlayer(1, "プレイヤー1", team);
+        Player player = CharacterType.createPlayer(1, "プレイヤー1", team,TacticsType.createTactics(1));
         party.appendPlayer(player);
-        player = CharacterType.createPlayer(2, "プレイヤー2", team);
+        player = CharacterType.createPlayer(2, "プレイヤー2", team,TacticsType.createTactics(2));
         party.appendPlayer(player);
-        player = CharacterType.createPlayer(3, "プレイヤー3", team);
+        player = CharacterType.createPlayer(3, "プレイヤー3", team,TacticsType.createTactics(3));
         party.appendPlayer(player);
+    }
+
+    private void makePartyenemy(Teams team){
+        Player player = CharacterType.createPlayer(4, "エネミー1", team,TacticsType.createTactics(4));
+        party.appendPlayer(player);
+        player = CharacterType.createPlayer(3, "エネミー2", team,TacticsType.createTactics(5));
+        party.appendPlayer(player);
+        player = CharacterType.createPlayer(2, "エネミー3", team,TacticsType.createTactics(1));
+        party.appendPlayer(player);
+    }
+    */
+
+    private Tactics choiceTacticsForInput(){
+        ArrayList<Integer> tacticsIntList = new ArrayList<Integer>();
+        for (TacticsType tacticsClass : TacticsType.values()) {
+            tacticsIntList.add(tacticsClass.getId());
+        }
+        
+        int tacticsInt = -1;
+        do{
+            showSelectTacticsMessage();
+            tacticsInt = UserInput.inputIntValidValues(tacticsIntList);
+        }while(!TacticsType.isValidId(tacticsInt));
+
+        return TacticsType.createTactics(tacticsInt);
     }
 }

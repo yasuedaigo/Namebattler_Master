@@ -1,7 +1,8 @@
 package masternamebattler.Chara;
 
 import masternamebattler.GameConstants;
-import masternamebattler.GlobalConstants;
+import masternamebattler.Console.ConsoleManager;
+import masternamebattler.Tactics.Tactics;
 
 /**
  * 忍者クラス
@@ -15,8 +16,8 @@ public class Ninja extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Ninja(String name,GameConstants.Teams team) {
-        super(name,team);
+    public Ninja(String name,GameConstants.Teams team,CharacterType characterType,Tactics tactics) {
+        super(name,team,characterType,tactics);
     }
 
     /**

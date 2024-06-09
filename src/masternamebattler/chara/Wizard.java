@@ -7,9 +7,11 @@ import java.util.ArrayList;
 
 import masternamebattler.GameConstants;
 import masternamebattler.GlobalConstants;
+import masternamebattler.Console.ConsoleManager;
 import masternamebattler.Magic.Fire;
 import masternamebattler.Magic.Magic;
 import masternamebattler.Magic.Thunder;
+import masternamebattler.Tactics.Tactics;
 
 /**
  * 魔法使いのクラス
@@ -23,8 +25,8 @@ public class Wizard extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Wizard(String name,GameConstants.Teams team) {
-        super(name,team);
+    public Wizard(String name,GameConstants.Teams team,CharacterType characterType,Tactics tactics) {
+        super(name,team,characterType,tactics);
     }
 
     /**

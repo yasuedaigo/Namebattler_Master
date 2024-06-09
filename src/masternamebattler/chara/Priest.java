@@ -6,11 +6,11 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import masternamebattler.GameConstants;
-import masternamebattler.GlobalConstants;
 import masternamebattler.Magic.Heal;
 import masternamebattler.Magic.Magic;
 import masternamebattler.Magic.Paralysis;
 import masternamebattler.Magic.Poison;
+import masternamebattler.Tactics.Tactics;
 
 /**
  * 僧侶のクラス
@@ -23,8 +23,8 @@ public class Priest extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Priest(String name,GameConstants.Teams team) {
-        super(name,team);
+    public Priest(String name,GameConstants.Teams team,CharacterType characterType,Tactics tactics) {
+        super(name,team,characterType,tactics);
     }
 
     /**

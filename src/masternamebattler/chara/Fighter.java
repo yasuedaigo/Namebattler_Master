@@ -1,7 +1,7 @@
 package masternamebattler.Chara;
 
 import masternamebattler.GameConstants;
-import masternamebattler.GlobalConstants;
+import masternamebattler.Tactics.Tactics;
 
 /**
  * 戦士クラス
@@ -14,8 +14,8 @@ public class Fighter extends Player {
      * コンストラクタ
      * @param team プレイヤーの所属するチーム
      */
-    public Fighter(String name,GameConstants.Teams team) {
-        super(name,team);
+    public Fighter(String name,GameConstants.Teams team,CharacterType characterType,Tactics tactics) {
+        super(name,team,characterType,tactics);
     }
 
     /**

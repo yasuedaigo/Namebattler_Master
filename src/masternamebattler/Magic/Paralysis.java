@@ -27,7 +27,7 @@ public class Paralysis  extends Magic{
     @Override
     public void cast(Player user, Player enemy) {
         super.cast(user, enemy);
-        enemy.setCondisions(Conditions.PARALYSIS);
+        enemy.setCondition(Conditions.PARALYSIS);
     }
 
     /**
