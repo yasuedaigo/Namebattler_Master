@@ -2,7 +2,6 @@ package masternamebattler.Condition;
 
 /**
  * 状態異常の列挙型
- * 表示名を持つ
  */
 public enum Conditions {
     PARALYSIS(ConditionConstants.PARALYSIS_DISPLAY_NAME),

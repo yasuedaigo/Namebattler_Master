@@ -8,9 +8,13 @@ import masternamebattler.Condition.Conditions;
  * 唱えると35～15のダメージを与える
  */
 public class Thunder extends Magic{
+    //表示名
     public final static String DISPLAY_NAME = MagicConstants.Thunder.DISPLAY_NAME;
+    //消費MP
     public final static int CONSUMPTION_MP = MagicConstants.Thunder.CONSUMPTION_MP;
+    //最大ダメージ
     public final static int MAX_DAMAGE = MagicConstants.Thunder.MAX_DAMAGE;
+    //最小ダメージ
     public final static int MIN_DAMAGE = MagicConstants.Thunder.MIN_DAMAGE;
 
     /**
@@ -24,7 +28,7 @@ public class Thunder extends Magic{
     public void cast(Player user, Player enemy) {
         super.cast(user, enemy);
         int damage = calcDamage();
-        enemy.damage(damage);
+        enemy.applyDamage(damage);
     }
 
     /**
@@ -51,11 +55,17 @@ public class Thunder extends Magic{
         return null;
     }
 
-    public int getMaxDamage() {
+    /**
+     * @return 最大ダメージ
+     */
+    protected int getMaxDamage() {
         return MAX_DAMAGE;
     }
 
-    public int getMinDamage() {
+    /**
+     * @return 最小ダメージ
+     */
+    protected int getMinDamage() {
         return MIN_DAMAGE;
     }
 }

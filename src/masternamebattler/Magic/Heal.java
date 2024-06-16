@@ -9,8 +9,11 @@ import masternamebattler.Condition.Conditions;
  * 唱えるとHPをH50回復する
  */
 public class Heal  extends Magic{
+    //表示名
     public static final String DISPLAY_NAME = MagicConstants.Heal.DISPLAY_NAME;
+    //消費MP
     public static final int CONSUMPTION_MP = MagicConstants.Heal.CONSUMPTION_MP;
+    //回復量
     public static final int HEAL_HP = MagicConstants.Heal.HEAL_HP;
 
     /**
@@ -20,8 +23,7 @@ public class Heal  extends Magic{
     @Override
     public void cast(Player user, Player enemy) {
         super.cast(user, enemy);
-        user.hp += HEAL_HP;
-        GameManager.consoleManager.addLogText(String.format(MagicConstants.Heal.HEAL_MESSAGE, user.name, HEAL_HP));
+        enemy.healHp(HEAL_HP);
     }
 
     /**
@@ -48,11 +50,17 @@ public class Heal  extends Magic{
         return null;
     }
 
+    /**
+     * @return 最大ダメージ
+     */
     public int getMaxDamage() {
-        return 0;
+        return MAX_DAMAGE;
     }
 
+    /**
+     * @return 最小ダメージ
+     */
     public int getMinDamage() {
-        return 0;
+        return MIN_DAMAGE;
     }
 }

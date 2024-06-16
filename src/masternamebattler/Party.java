@@ -9,19 +9,25 @@ import java.util.stream.Collectors;
 import masternamebattler.Chara.Player;
 import masternamebattler.GameConstants.Teams;
 import masternamebattler.Condition.Conditions;
-import java.util.Set;
 
-
+/**
+ * パーティーを管理するクラス
+ */
 public class Party {
-    private List<Player> beforMembers;
+    // パーティーのメンバーリスト
     private List<Player> members;
-    private Teams team;
 
+    /**
+     * コンストラクタ
+     * メンバーリストを初期化する
+     */
     public Party() {
-        beforMembers = new ArrayList<>();
         members = new ArrayList<>();
     }
 
+    /**
+     * @return メンバーリスト
+     */
     public List<Player> getMembers() {
         return members;
     }
@@ -35,38 +41,18 @@ public class Party {
     }
 
     /**
-     * パーティーからプレイヤーを離脱させる
-     * @param player 離脱させるプレイヤー
+     * パーティーのメンバーリストをAGIの降順でソートする
      */
-    public void removePlayer(Player player) {
-        members.remove(player);
-    }
-
-    public void setBeforMembers() {
-        beforMembers = members;
-    }
-
     public void sortPlayerListForAgi() {
         members.sort((player1, player2) -> player2.getAgi() - player1.getAgi());
     }
-
-    /*
-     * public void showMembers() {
-        GameManager.consoleManager.addPlayLog("------------------------------");
-        GameManager.consoleManager.addPlayLog("現在の状況");
-        for (Player player : members) {
-            player.showInfo();
-        }
-        GameManager.consoleManager.addPlayLog("------------------------------");
-    }
-     */
     
-
     /**
-     * 次に攻撃するプレイヤーを取得する
-     * @return 次に攻撃するプレイヤー
+     * 攻撃するプレイヤーを取得する
+     * @return 攻撃するプレイヤー
      */
     public Player getAttacker() {
+        //membersの前から撃済みでないプレイヤーを取得する
         for (Player player : members) {
             if (!player.getIsAttacked()) {
                 return player;
@@ -76,26 +62,26 @@ public class Party {
     }
 
     /**
-     * 次に防御するプレイヤーを取得する
+     * 防御するプレイヤーを取得する
      * @param attacker 攻撃するプレイヤー
      * @return 防御するプレイヤー
      */
     public Player getDefender(Player attacker) {
-        List<Player> oppositeTeamMembers = members.stream()
-                .filter(player -> player.getTeam() != attacker.getTeam() && player.getIsLive())
-                .collect(Collectors.toList());
+        List<Player> oppositeTeamMembers = getMembers(attacker.getTeam().getOpposite());
         Random random = new Random();
         return oppositeTeamMembers.get(random.nextInt(oppositeTeamMembers.size()));
     }
 
     /**
-     * 毒ダメージを処理する
+     * 毒ダメージ処理
      */
     public void poisonDamage() {
+        // 毒状態のプレイヤーに毒ダメージを与える
         for (Player player : members) {
             if(player.getCondition() == Conditions.POISON){
                 player.poisonDamage();
             }
+            //ゲーム終了判定を行う
             checkGameEnd();
         }
     }
@@ -105,6 +91,7 @@ public class Party {
      * @return ターンが終了している場合はtrue
      */
     public boolean checkTurnEnd() {
+        //生存状態のすべてのプレイヤーが攻撃済みであればターン終了
         for (Player player : members) {
             if (player.getIsLive() && !player.getIsAttacked()) {
                 return false;
@@ -118,17 +105,13 @@ public class Party {
      * @return ゲームが終了している場合はtrue
      */
     public boolean checkGameEnd() {
-        // 生きているプレイヤーのみを抽出
-        List<Player> livePlayers = members.stream()
-                .filter(Player::getIsLive)
-                .collect(Collectors.toList());
-        Set<GameConstants.Teams> uniqueTeams = livePlayers.stream()
-                .map(Player::getTeam)
-                .collect(Collectors.toSet());
-    
-        // チームの種類が1つ以下であればゲーム終了
-        return uniqueTeams.size() <= 1;
-        
+        //プレイヤーチームとエネミーチームのどちらかが全滅していればゲーム終了
+        List<Player> playerTeamList = getMembers(Teams.PLAYER);
+        List<Player> enemyTeamList = getMembers(Teams.ENEMY);
+        if(playerTeamList.size() < 1 || enemyTeamList.size() < 1){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -136,20 +119,31 @@ public class Party {
      * @return 勝者のプレイヤー
      */
     public Teams getWinner() {
+        //生存しているプレイヤーのチームを取得する
         for (Player player : members) {
             if (player.getIsLive()) {
-                return player.getTeam(); // 生きているプレイヤーのチームを返す
+                return player.getTeam();
             }
         }
-        return null; // 生きているプレイヤーがいない場合は null を返す
+        return null;
     }
 
+    /**
+     * 受け取ったチームのメンバーリストを取得する
+     */
     public List<Player> getMembers(Teams team) {
         return members.stream()
                 .filter(player -> player.getTeam() == team)
+                .filter(Player::getIsLive)
                 .collect(Collectors.toList());
     }
-        
+    
+    /**
+     * チームのメンバーを取得する
+     * @param team チーム
+     * @param index メンバーのインデックス
+     * @return チームのメンバー
+     */
     public Player getPlayer(Teams team, int index){
         List<Player> teamMembers = getMembers(team);
         if (index < teamMembers.size()) {
@@ -158,6 +152,9 @@ public class Party {
         return null;
     }
 
+    /**
+     * 攻撃済みフラグをリセットする
+     */
     public void resetIsAttacked(){
         for (Player player : members) {
             player.setIsAttacked(false);

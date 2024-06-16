@@ -8,10 +8,14 @@ import masternamebattler.Condition.Conditions;
  * 10～30のダメージを与える
  */
 public class Fire extends Magic{
-    public static final String DISPLAY_NAME = MagicConstants.Fire.DISPLAY_NAME;
-    public static final int CONSUMPTION_MP = MagicConstants.Fire.CONSUMPTION_MP;
-    public static final int MAX_DAMAGE = MagicConstants.Fire.MAX_DAMAGE;
-    public static final int MIN_DAMAGE = MagicConstants.Fire.MIN_DAMAGE;
+    //表示名
+    protected static final String DISPLAY_NAME = MagicConstants.Fire.DISPLAY_NAME;
+    //消費MP
+    protected static final int CONSUMPTION_MP = MagicConstants.Fire.CONSUMPTION_MP;
+    //最大ダメージ
+    protected static final int MAX_DAMAGE = MagicConstants.Fire.MAX_DAMAGE;
+    //最小ダメージ
+    protected static final int MIN_DAMAGE = MagicConstants.Fire.MIN_DAMAGE;
 
     /**
      * 唱えたときの処理
@@ -24,7 +28,7 @@ public class Fire extends Magic{
     public void cast(Player user, Player enemy) {
         super.cast(user, enemy);
         int damage = calcDamage();
-        enemy.damage(damage);
+        enemy.applyDamage(damage);
     }
 
     /**
@@ -51,11 +55,17 @@ public class Fire extends Magic{
         return null;
     }
 
-    public int getMaxDamage() {
+    /**
+     * @return 最大ダメージ
+     */
+    protected int getMaxDamage() {
         return MAX_DAMAGE;
     }
 
-    public int getMinDamage() {
+    /**
+     * @return 最小ダメージ
+     */
+    protected int getMinDamage() {
         return MIN_DAMAGE;
     }
 }

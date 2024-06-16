@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 
 class HashDigest {
 
-    /**
+/**
  * ハッシュダイジェストから数値を取り出す
  * @param name 名前
  * @param index 何番目の数値を取り出すか
@@ -24,6 +24,11 @@ class HashDigest {
     return 0;
 }
 
+    /**
+     * ハッシュ値を取得する
+     * @param name
+     * @return
+     */
     private static String getHashDigest(String name) {
         try {
             // ハッシュ値を取得する
@@ -40,6 +45,12 @@ class HashDigest {
         return null;
     }
 
+    /**
+     * ハッシュダイジェストからパーセンテージを取り出す
+     * @param name 名前
+     * @param index 何番目の数値を取り出すか
+     * @return パーセンテージ(0 ～ 100)
+     */
     protected static int generatePercentage(String name,int index) {
         int baseNumber = generateNumber(name,index);
         return baseNumber * 100 / 255;

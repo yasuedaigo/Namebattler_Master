@@ -1,14 +1,26 @@
 package masternamebattler.Magic;
 
+/**
+ * 魔法に関する定数クラス
+ */
 public class MagicConstants {
+    //魔法の基底クラスに関する定数
     public static class Magic{
+        //魔法を唱えられなかった際のメッセージ
         public static final String CANNOTCASTMESSAGE = "%sは%sを唱えられなかった！";
+        //魔法を唱えた際のメッセージ
         public static final String CASTMESSAGE = "%sは%sを唱えた！";
+        //表示名
         public static final String DISPLAY_NAME = "魔法";
+        //消費MP
         public static final int CONSUMPTION_MP = 0;
+        //最大ダメージ
         public static final int MAX_DAMAGE = 0;
+        //最小ダメージ
         public static final int MIN_DAMAGE = 0;
     }
+
+    //各魔法に関する定数
     public static class Fire{
         public static final String DISPLAY_NAME = "ファイア";
         public static final int CONSUMPTION_MP = 10;
@@ -24,21 +36,18 @@ public class MagicConstants {
     public static class Heal{
         public static final String DISPLAY_NAME = "ヒール";
         public static final int CONSUMPTION_MP = 20;
+        //回復量
         public static final int HEAL_HP = 50;
-        public static final String HEAL_MESSAGE = "%sは%s回復した";
     }
     public static class Paralysis{
         public static final String DISPLAY_NAME = "パライズ";
         public static final int CONSUMPTION_MP = 10;
-        public static final int PARALYSIS_RATE = 20;
         public static final int MAX_DAMAGE = 0;
         public static final int MIN_DAMAGE = 0;
     }
     public static class Poison{
         public static final String DISPLAY_NAME = "ポイズン";
         public static final int CONSUMPTION_MP = 10;
-        public static final int POISON_MAX_DAMAGE = 30;
-        public static final int POISON_MIN_DAMAGE = 10;
         public static final int MAX_DAMAGE = 0;
         public static final int MIN_DAMAGE = 0;
     }

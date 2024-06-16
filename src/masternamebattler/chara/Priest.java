@@ -3,9 +3,9 @@ package masternamebattler.Chara;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.ArrayList;
 
 import masternamebattler.GameConstants;
+import masternamebattler.GameManager;
 import masternamebattler.Magic.Heal;
 import masternamebattler.Magic.Magic;
 import masternamebattler.Magic.Paralysis;
@@ -13,34 +13,34 @@ import masternamebattler.Magic.Poison;
 import masternamebattler.Tactics.Tactics;
 
 /**
- * 僧侶のクラス
- * ヒールとパライズとポイズンを使える
+ *  職業のひとつ「僧侶」
+ *     ヒールとポイズンとパライズの魔法を使える
  */
 public class Priest extends Player {
+    // 表示名
     public static final String DISPLAY_NAME = CharaConstants.Priest.DISPLAY_NAME;
 
     /**
      * コンストラクタ
+     * @param name プレイヤーの名前
      * @param team プレイヤーの所属するチーム
+     * @param characterType 職業を表す列挙子
+     * @param tactics 作戦を表す列挙子
      */
     public Priest(String name,GameConstants.Teams team,CharacterType characterType,Tactics tactics) {
         super(name,team,characterType,tactics);
+        this.useAbleMagics = Arrays.asList(
+            new Paralysis(),
+            new Poison(),
+            new Heal()
+        );
     }
 
     /**
-     * 僧侶が使用可能な魔法をリストで持つ
-     */
-    public List<Magic> usableMagics = Arrays.asList(
-        new Paralysis(),
-        new Poison(),
-        new Heal()
-    );
-
-    /**
-     * ステータスを計算してセットする
+     * 名前からステータスを計算してセットする
      */
     @Override
-    public void setStatsu(String name){
+    protected void setStatsu(String name){
         this.hp = calcStatus(this.name, CharaConstants.Priest.MAX_HP, CharaConstants.Priest.MIN_HP, CharaConstants.HP_INDEX);
         this.mp = calcStatus(this.name, CharaConstants.Priest.MAX_MP, CharaConstants.Priest.MIN_MP, CharaConstants.MP_INDEX);
         this.str = calcStatus(this.name, CharaConstants.Priest.MAX_STR, CharaConstants.Priest.MIN_STR, CharaConstants.STR_INDEX);
@@ -50,7 +50,7 @@ public class Priest extends Player {
     }
 
     /**
-     * @return 僧侶の職業名
+     * @return 職業の表示名
      */
     @Override
     public String getDisplayJobName() {
@@ -59,86 +59,29 @@ public class Priest extends Player {
 
     /**
      * 攻撃処理
-     * 麻痺判定を行い、麻痺した場合は攻撃できない
-     * 魔法を使用可能な場合は、使用可能な魔法を使うもしくは通常攻撃をする
-     * 使用できる魔法がない場合は通常攻撃を行う
      * @param enemy 攻撃対象のプレイヤー
      */
     @Override
-    public void attack(Player enemy) {
+    public void attack() {
+        // 麻痺判定を行い、麻痺した場合は攻撃できない
         if(isIncapacitationForParalysis()){
-            System.out.println(String.format(CharaConstants.PARALYSIS_MESSAGE, this.name));
+            GameManager.consoleManager.addLogText(String.format(CharaConstants.PARALYSIS_MESSAGE, this.name));
             return;
         }
+
         Magic choicedMagic = null;
+        // 使用できる魔法がある場合は、魔法を選択する
         if(canUseMagic()){
-            choicedMagic = choiceMagic(enemy);
+            choicedMagic = choiceMagic();
         }
 
-        // 使用できる魔法がある場合は、通常攻撃を行うか魔法を使用する。通常攻撃を行う確率は50%
         if(choicedMagic != null) {
-            Random random = new Random();
-            if (random.nextInt(2) == 1) {
-                super.normalAttack(enemy);
-                return;
-            }
+            //魔法を使用する
             choicedMagic.cast(this, enemy);
             return;
         }
-        super.normalAttack(enemy);
-    }
 
-    /**
-     * 使用する魔法を選択する
-     * @param enemy 攻撃対象のプレイヤー
-     * @return 使用可能な魔法の中からランダムで魔法を返す
-     */
-    public Magic choiceMagic(Player enemy){
-
-        //使用可能な魔法をリストに加える
-        List<Magic> availableMagics = new ArrayList<>();
-        for (Magic magic : usableMagics) {
-            if (isAvailableMagic(magic, enemy)) {
-                availableMagics.add(magic);
-            }
-        }
-
-        //使用可能な魔法がある場合は、その中からランダムで魔法を選択する
-        if (!availableMagics.isEmpty()) {
-            Random random = new Random();
-            int index = random.nextInt(availableMagics.size());
-            return availableMagics.get(index);
-        }
-        return null;
-    }
-
-    /**
-     * 魔法が使用できるかどうか
-     * @return 現在のMPで使用できる魔法がある場合はtrue
-     */
-    public boolean canUseMagic() {
-        for (Magic magic : usableMagics) {
-            if (magic.getConsumptionMp() <= this.mp) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 魔法が使用に適しているか判定する
-     * MPが足りていて、状態異常を付与する魔法の場合、同じ状態異常に敵がかかっていない場合にtrueを返す
-     * @param magic 選択した魔法
-     * @param enemy 攻撃対象のプレイヤー
-     * @return 使用に適している場合はtrue
-     */
-    public boolean isAvailableMagic(Magic magic, Player enemy) {
-        if (magic.getConsumptionMp() > this.mp) {
-            return false;
-        }
-        if (enemy.getCondition() != null && magic.getGrantCondition() != null) {
-            return false;
-        }
-        return true;
+        //使用できる魔法がない場合は通常攻撃を行う
+        super.normalAttack();
     }
 }

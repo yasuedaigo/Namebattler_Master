@@ -1,6 +1,11 @@
 package masternamebattler.Tactics;
 
+/**
+ * 作戦に関する定数
+ */
 public class TacticsConstants {
+    //各作戦クラスの定数
+    
     public static class Tactics {
         public static final String DISPLAY_NAME = "作戦";
     }

@@ -2,25 +2,30 @@ package masternamebattler.Magic;
 
 import masternamebattler.Chara.Player;
 import masternamebattler.Condition.Conditions;
+import masternamebattler.GameConstants;
 
 /**
  * 魔法のひとつ「パライズ」
- * 唱えると相手を麻痺状態にする
- * 麻痺の確率は20%
  */
 public class Paralysis  extends Magic{
-    
+    //表示名
     public final static String DISPLAY_NAME = MagicConstants.Paralysis.DISPLAY_NAME;
+    //消費MP
     public final static int CONSUMPTION_MP = MagicConstants.Paralysis.CONSUMPTION_MP;
-    public final static int PARALYSIS_RATE = MagicConstants.Paralysis.PARALYSIS_RATE;
+    //麻痺の確率
+    public final static int PARALYSIS_RATE = GameConstants.PARALYSIS_RATE;
+    //最大ダメージ
     public final static int MAX_DAMAGE = MagicConstants.Paralysis.MAX_DAMAGE;
+    //最小ダメージ
     public final static int MIN_DAMAGE = MagicConstants.Paralysis.MIN_DAMAGE;
 
-    private Conditions GRANT_CONDITION = Conditions.PARALYSIS;  // 付与する状態異常
+    // 付与する状態異常
+    private Conditions GRANT_CONDITION = Conditions.PARALYSIS;
 
 
     /**
-     * 敵に麻痺を付与する
+     * 魔法を唱えたときの処理
+     * 麻痺を付与する
      * @param user 味方プレイヤー
      * @param enemy 敵プレイヤー
      */
@@ -54,11 +59,11 @@ public class Paralysis  extends Magic{
         return GRANT_CONDITION;
     }
 
-    public int getMaxDamage() {
+    protected int getMaxDamage() {
         return MAX_DAMAGE;
     }
 
-    public int getMinDamage() {
+    protected int getMinDamage() {
         return MIN_DAMAGE;
     }
 }

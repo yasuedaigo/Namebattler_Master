@@ -1,30 +1,32 @@
 package masternamebattler.Chara;
 
 import masternamebattler.GameConstants;
-import masternamebattler.Console.ConsoleManager;
 import masternamebattler.Tactics.Tactics;
 
 /**
- * 忍者クラス
- * 麻痺しない特徴を持つ
+ *  職業のひとつ「忍者」
+ *     麻痺しない
  */
 public class Ninja extends Player {
-    // 忍者のステータスの最大値、最小値
+    // 表示名
     public static final String DISPLAY_NAME = CharaConstants.Ninja.DISPLAY_NAME;
 
     /**
      * コンストラクタ
+     * @param name プレイヤーの名前
      * @param team プレイヤーの所属するチーム
+     * @param characterType 職業を表す列挙子
+     * @param tactics 作戦を表す列挙子
      */
     public Ninja(String name,GameConstants.Teams team,CharacterType characterType,Tactics tactics) {
         super(name,team,characterType,tactics);
     }
 
     /**
-     * ステータスを計算してセットする
+     * 名前からステータスを計算してセットする
      */
     @Override
-    public void setStatsu(String name){
+    protected void setStatsu(String name){
         this.hp = calcStatus(this.name, CharaConstants.Ninja.MAX_HP, CharaConstants.Ninja.MIN_HP, CharaConstants.HP_INDEX);
         this.mp = calcStatus(this.name, CharaConstants.Ninja.MAX_MP, CharaConstants.Ninja.MIN_MP, CharaConstants.MP_INDEX);
         this.str = calcStatus(this.name, CharaConstants.Ninja.MAX_STR, CharaConstants.Ninja.MIN_STR, CharaConstants.STR_INDEX);
@@ -37,23 +39,15 @@ public class Ninja extends Player {
      * 攻撃処理
      * 麻痺しないため、通常攻撃のみを行う
      */
-    public void attack(Player enemy) {
-        normalAttack(enemy);
+    public void attack() {
+        normalAttack();
     }
 
     /**
-     * @return 表示名
+     * @return 職業の表示名
      */
     @Override
     public String getDisplayJobName() {
         return DISPLAY_NAME;
-    }
-
-    /**
-     * @return 麻痺しないため常にfalse
-     */
-    @Override
-    public boolean isIncapacitationForParalysis(){
-        return false;
     }
 }

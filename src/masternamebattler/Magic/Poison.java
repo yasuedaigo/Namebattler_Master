@@ -1,26 +1,33 @@
 package masternamebattler.Magic;
 
+import masternamebattler.GameConstants;
 import masternamebattler.Chara.Player;
 import masternamebattler.Condition.Conditions;
 
 /**
  * 魔法のひとつ「ポイズン」
- * 唱えると相手を毒状態にする
- * 毒ダメージは10~30
  */
 public class Poison extends Magic{
+    //表示名
     public final static String DISPLAY_NAME = MagicConstants.Poison.DISPLAY_NAME;
+    //消費MP
     public final static int CONSUMPTION_MP = MagicConstants.Poison.CONSUMPTION_MP;
-    public final static int POISON_MAX_DAMAGE = MagicConstants.Poison.POISON_MAX_DAMAGE;
-    public final static int POISON_MIN_DAMAGE = MagicConstants.Poison.POISON_MIN_DAMAGE;
+    //最大ダメージ
+    public final static int POISON_MAX_DAMAGE = GameConstants.POISON_MAX_DAMAGE;
+    //最小ダメージ
+    public final static int POISON_MIN_DAMAGE = GameConstants.POISON_MIN_DAMAGE;
+    //最大ダメージ
     public final static int MAX_DAMAGE = MagicConstants.Poison.MAX_DAMAGE;
+    //最小ダメージ
     public final static int MIN_DAMAGE = MagicConstants.Poison.MIN_DAMAGE;
 
-    private Conditions GRANT_CONDITION = Conditions.POISON;  // 付与する状態異常
+    // 付与する状態異常
+    private Conditions GRANT_CONDITION = Conditions.POISON;
 
 
     /**
-     * 敵に毒を付与する
+     * 魔法を唱えたときの処理
+     * 毒を付与する
      * @param user 味方プレイヤー
      * @param enemy 敵プレイヤー
      */
@@ -54,11 +61,17 @@ public class Poison extends Magic{
         return GRANT_CONDITION;
     }
 
-    public int getMaxDamage() {
+    /**
+     * @return 最大ダメージ
+     */
+    protected int getMaxDamage() {
         return MAX_DAMAGE;
     }
 
-    public int getMinDamage() {
+    /**
+     * @return 最小ダメージ
+     */
+    protected int getMinDamage() {
         return MIN_DAMAGE;
     }
 }
