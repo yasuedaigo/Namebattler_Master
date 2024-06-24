@@ -7,21 +7,22 @@ import masternamebattler.Condition.Conditions;
  * 魔法のひとつ「ファイア」
  * 10～30のダメージを与える
  */
-public class Fire extends Magic{
-    //表示名
+public class Fire extends Magic {
+    // 表示名
     protected static final String DISPLAY_NAME = MagicConstants.Fire.DISPLAY_NAME;
-    //消費MP
+    // 消費MP
     protected static final int CONSUMPTION_MP = MagicConstants.Fire.CONSUMPTION_MP;
-    //最大ダメージ
+    // 最大ダメージ
     protected static final int MAX_DAMAGE = MagicConstants.Fire.MAX_DAMAGE;
-    //最小ダメージ
+    // 最小ダメージ
     protected static final int MIN_DAMAGE = MagicConstants.Fire.MIN_DAMAGE;
 
     /**
      * 唱えたときの処理
      * ダメージを計算し、敵プレイヤーに与える
      * MPを消費する
-     * @param user 魔法を使用するプレイヤー
+     * 
+     * @param user  魔法を使用するプレイヤー
      * @param enemy 魔法の対象となる敵プレイヤー
      */
     @Override

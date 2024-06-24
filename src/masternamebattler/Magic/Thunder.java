@@ -7,21 +7,22 @@ import masternamebattler.Condition.Conditions;
  * 魔法のひとつ「サンダー」
  * 唱えると35～15のダメージを与える
  */
-public class Thunder extends Magic{
-    //表示名
+public class Thunder extends Magic {
+    // 表示名
     public final static String DISPLAY_NAME = MagicConstants.Thunder.DISPLAY_NAME;
-    //消費MP
+    // 消費MP
     public final static int CONSUMPTION_MP = MagicConstants.Thunder.CONSUMPTION_MP;
-    //最大ダメージ
+    // 最大ダメージ
     public final static int MAX_DAMAGE = MagicConstants.Thunder.MAX_DAMAGE;
-    //最小ダメージ
+    // 最小ダメージ
     public final static int MIN_DAMAGE = MagicConstants.Thunder.MIN_DAMAGE;
 
     /**
      * 唱えたときの処理
      * ダメージを計算し、敵プレイヤーに与える
      * MPを消費する
-     * @param user 魔法を使用するプレイヤー
+     * 
+     * @param user  魔法を使用するプレイヤー
      * @param enemy 魔法の対象となる敵プレイヤー
      */
     @Override

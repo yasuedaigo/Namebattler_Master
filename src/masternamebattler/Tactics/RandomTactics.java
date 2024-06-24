@@ -2,20 +2,19 @@ package masternamebattler.Tactics;
 
 import masternamebattler.Party;
 import masternamebattler.Chara.Player;
-import masternamebattler.Tactics.TacticsConstants;
-import masternamebattler.Tactics.TacticsConstants;
 
 /**
  * 作戦のひとつ「バッチリがんばれ」
  * ランダムな敵をターゲットする
  */
-public class RandomTactics extends Tactics{
+public class RandomTactics extends Tactics {
     public static final String DISPLAY_NAME = TacticsConstants.RandomTactics.DISPLAY_NAME;
-    
+
     /**
      * 攻撃対象を決定する
      * ランダムな敵をターゲットする
-     * @param party パーティ
+     * 
+     * @param party  パーティ
      * @param player 攻撃するプレイヤー
      * @return 攻撃対象のプレイヤー
      */

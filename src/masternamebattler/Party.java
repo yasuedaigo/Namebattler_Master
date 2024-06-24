@@ -34,6 +34,7 @@ public class Party {
 
     /**
      * パーティーにプレイヤーを追加する
+     * 
      * @param player 追加するプレイヤー
      */
     public void appendPlayer(Player player) {
@@ -46,14 +47,16 @@ public class Party {
     public void sortPlayerListForAgi() {
         members.sort((player1, player2) -> player2.getAgi() - player1.getAgi());
     }
-    
+
     /**
      * 攻撃するプレイヤーを取得する
+     * 
      * @return 攻撃するプレイヤー
      */
     public Player getAttacker() {
-        //membersの前から撃済みでないプレイヤーを取得する
+        // membersの前から撃済みでないプレイヤーを取得する
         for (Player player : members) {
+
             if (!player.getIsAttacked()) {
                 return player;
             }
@@ -63,6 +66,7 @@ public class Party {
 
     /**
      * 防御するプレイヤーを取得する
+     * 
      * @param attacker 攻撃するプレイヤー
      * @return 防御するプレイヤー
      */
@@ -78,21 +82,24 @@ public class Party {
     public void poisonDamage() {
         // 毒状態のプレイヤーに毒ダメージを与える
         for (Player player : members) {
-            if(player.getCondition() == Conditions.POISON){
+
+            if (player.getCondition() == Conditions.POISON) {
                 player.poisonDamage();
             }
-            //ゲーム終了判定を行う
+            // ゲーム終了判定を行う
             checkGameEnd();
         }
     }
 
     /**
      * ターンの終了をチェックする
+     * 
      * @return ターンが終了している場合はtrue
      */
     public boolean checkTurnEnd() {
-        //生存状態のすべてのプレイヤーが攻撃済みであればターン終了
+        // 生存状態のすべてのプレイヤーが攻撃済みであればターン終了
         for (Player player : members) {
+
             if (player.getIsLive() && !player.getIsAttacked()) {
                 return false;
             }
@@ -102,13 +109,14 @@ public class Party {
 
     /**
      * ゲームの終了をチェックする
+     * 
      * @return ゲームが終了している場合はtrue
      */
     public boolean checkGameEnd() {
-        //プレイヤーチームとエネミーチームのどちらかが全滅していればゲーム終了
+        // プレイヤーチームとエネミーチームのどちらかが全滅していればゲーム終了
         List<Player> playerTeamList = getMembers(Teams.PLAYER);
         List<Player> enemyTeamList = getMembers(Teams.ENEMY);
-        if(playerTeamList.size() < 1 || enemyTeamList.size() < 1){
+        if (playerTeamList.size() < 1 || enemyTeamList.size() < 1) {
             return true;
         }
         return false;
@@ -116,11 +124,13 @@ public class Party {
 
     /**
      * 勝者を取得する
+     * 
      * @return 勝者のプレイヤー
      */
     public Teams getWinner() {
-        //生存しているプレイヤーのチームを取得する
+        // 生存しているプレイヤーのチームを取得する
         for (Player player : members) {
+
             if (player.getIsLive()) {
                 return player.getTeam();
             }
@@ -137,15 +147,17 @@ public class Party {
                 .filter(Player::getIsLive)
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * チームのメンバーを取得する
-     * @param team チーム
+     * 
+     * @param team  チーム
      * @param index メンバーのインデックス
      * @return チームのメンバー
      */
-    public Player getPlayer(Teams team, int index){
+    public Player getPlayer(Teams team, int index) {
         List<Player> teamMembers = getMembers(team);
+        
         if (index < teamMembers.size()) {
             return teamMembers.get(index);
         }
@@ -155,7 +167,7 @@ public class Party {
     /**
      * 攻撃済みフラグをリセットする
      */
-    public void resetIsAttacked(){
+    public void resetIsAttacked() {
         for (Player player : members) {
             player.setIsAttacked(false);
         }

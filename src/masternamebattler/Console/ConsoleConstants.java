@@ -15,19 +15,19 @@ public class ConsoleConstants {
 
     // カーソルを指定した位置に移動する
     public static final String ANSI_MOVE_CURSOR = "\u001B[%d;%dH";
-    //改行コード
+    // 改行コード
     public static final String LINE_BREAK = "\n";
-    //左寄せフォーマット
+    // 左寄せフォーマット
     public static final String LEFT_ALIGN_FORMAT = "%%-%ds";
-    //コンソールをリセット
+    // コンソールをリセット
     public static final String ANSI_RESET_CONSOLE = "\033c";
-    //タイトルメッセージ
+    // タイトルメッセージ
     public static final String TITLE_MESSAGE = "ネームバトラー";
-    //プラス
+    // プラス
     public static final String PLUS_SIGN = "+";
 
     // プレイヤーコンポーネントに関する定数
-    public static class PlayerComponent{
+    public static class PlayerComponent {
         public static final String NAME_MESSAGE = "%s (%s) ";
         public static final String CONDITION_MESSAGE = "isAttacked : %s\nTeam : %s\n Condition : %s\n Tactics : %s";
         public static final String STATUS_MESSAGE = "HP : %d\nMP : %d\nSTR : %d\nDEF : %d\nAGI : %d\nLUCK : %d\n";

@@ -7,28 +7,28 @@ import masternamebattler.Condition.Conditions;
 /**
  * 魔法のひとつ「ポイズン」
  */
-public class Poison extends Magic{
-    //表示名
+public class Poison extends Magic {
+    // 表示名
     public final static String DISPLAY_NAME = MagicConstants.Poison.DISPLAY_NAME;
-    //消費MP
+    // 消費MP
     public final static int CONSUMPTION_MP = MagicConstants.Poison.CONSUMPTION_MP;
-    //最大ダメージ
+    // 最大ダメージ
     public final static int POISON_MAX_DAMAGE = GameConstants.POISON_MAX_DAMAGE;
-    //最小ダメージ
+    // 最小ダメージ
     public final static int POISON_MIN_DAMAGE = GameConstants.POISON_MIN_DAMAGE;
-    //最大ダメージ
+    // 最大ダメージ
     public final static int MAX_DAMAGE = MagicConstants.Poison.MAX_DAMAGE;
-    //最小ダメージ
+    // 最小ダメージ
     public final static int MIN_DAMAGE = MagicConstants.Poison.MIN_DAMAGE;
 
     // 付与する状態異常
     private Conditions GRANT_CONDITION = Conditions.POISON;
 
-
     /**
      * 魔法を唱えたときの処理
      * 毒を付与する
-     * @param user 味方プレイヤー
+     * 
+     * @param user  味方プレイヤー
      * @param enemy 敵プレイヤー
      */
     @Override

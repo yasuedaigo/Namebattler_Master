@@ -11,6 +11,7 @@ public enum Conditions {
 
     /**
      * コンストラクタ
+     * 
      * @param DISPLAY_NAME 表示名
      */
     Conditions(String DISPLAY_NAME) {

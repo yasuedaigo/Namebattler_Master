@@ -2,7 +2,6 @@ package masternamebattler;
 
 import masternamebattler.Util.UserInput.UserInput;
 
-
 /**
  * 
  * メインクラス

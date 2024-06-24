@@ -2,8 +2,6 @@ package masternamebattler.Tactics;
 
 import java.util.function.Supplier;
 
-import masternamebattler.Chara.CharacterType;
-
 /**
  * 作戦を表す列挙型
  */
@@ -23,9 +21,10 @@ public enum TacticsType {
 
     /**
      * コンストラクタ
-     * @param id 戦術のID
+     * 
+     * @param id                  戦術のID
      * @param displayNameSupplier 表示名のサプライヤー
-     * @param tacticsConstructor 作戦のコンストラクタ
+     * @param tacticsConstructor  作戦のコンストラクタ
      */
     TacticsType(int id, Supplier<String> displayNameSupplier, Supplier<Tactics> tacticsConstructor) {
         this.id = id;
@@ -35,11 +34,13 @@ public enum TacticsType {
 
     /**
      * IDから作戦のインスタンスを生成する
+     * 
      * @return 作戦のインスタンス
      */
     public static Tactics createTactics(int tacticsId) {
         // IDと一致する作戦のコンストラクタを呼び出す
         for (TacticsType tactics : values()) {
+
             if (tactics.getId() == tacticsId) {
                 return tactics.tacticsConstructor.get();
             }
@@ -49,14 +50,17 @@ public enum TacticsType {
 
     /**
      * 受け取ったidが有効かどうかを判定する
+     * 
      * @param id 職業のID
      * @return 有効な値の場合true
      */
     public static boolean isValidId(int id) {
         for (TacticsType tacticsClass : values()) {
+
             if (tacticsClass.getId() == id) {
                 return true;
             }
+            
         }
         return false;
     }
@@ -75,5 +79,4 @@ public enum TacticsType {
         return displayNameSupplier.get();
     }
 
-    
 }
